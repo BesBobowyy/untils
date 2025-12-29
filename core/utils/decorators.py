@@ -45,3 +45,16 @@ def deprecated(version: str = '<unknown>', reason: str = "Deprecated Method") ->
             return func(*args, **kwargs)
         return wrapper
     return decorator
+
+def alternative(version: str = '<unknown>', reason: str = "Experimental Feature") -> Callable[..., Any]:
+    def decorator(func: Callable[..., Any]) -> Callable[..., Any]:
+        @wraps(func)
+        def wrapper(*args: Any, **kwargs: Any) -> Any:
+            warnings.warn(
+                f"{func.__name__}: {reason} [Version: {version}]",
+                FutureWarning,
+                stacklevel=2
+            )
+            return func(*args, **kwargs)
+        return wrapper
+    return decorator
