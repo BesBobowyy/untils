@@ -2,12 +2,16 @@ from core.utils.constants import Strings
 
 from functools import wraps
 
-from typing import Callable, Any
+from typing import Callable, Any, TypeVar
+FuncType = TypeVar("FuncType", bound=Callable[..., Any])
 
 import warnings
 
-def deprecated(version: str = Strings.UNKNOWN_VERSION, reason: str = Strings.DEPRECATED_METHOD) -> Callable[..., Any]:
-    def decorator(func: Callable[..., Any]) -> Callable[..., Any]:
+def deprecated(
+        version: str = Strings.UNKNOWN_VERSION,
+        reason: str = Strings.DEPRECATED_METHOD
+) -> Callable[[FuncType], FuncType]:
+    def decorator(func: FuncType) -> FuncType:
         @wraps(func)
         def wrapper(*args: Any, **kwargs: Any) -> Any:
             warnings.warn(
@@ -16,11 +20,14 @@ def deprecated(version: str = Strings.UNKNOWN_VERSION, reason: str = Strings.DEP
                 stacklevel=2
             )
             return func(*args, **kwargs)
-        return wrapper
+        return wrapper    # pyright: ignore[reportReturnType]
     return decorator
 
-def alternative(version: str = Strings.UNKNOWN_VERSION, reason: str = Strings.ALTERNATIVE_METHOD) -> Callable[..., Any]:
-    def decorator(func: Callable[..., Any]) -> Callable[..., Any]:
+def alternative(
+        version: str = Strings.UNKNOWN_VERSION,
+        reason: str = Strings.ALTERNATIVE_METHOD
+) -> Callable[[FuncType], FuncType]:
+    def decorator(func: FuncType) -> FuncType:
         @wraps(func)
         def wrapper(*args: Any, **kwargs: Any) -> Any:
             warnings.warn(
@@ -29,5 +36,5 @@ def alternative(version: str = Strings.UNKNOWN_VERSION, reason: str = Strings.AL
                 stacklevel=2
             )
             return func(*args, **kwargs)
-        return wrapper
+        return wrapper    # pyright: ignore[reportReturnType]
     return decorator
