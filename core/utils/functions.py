@@ -2,7 +2,7 @@ from core.utils.enums import WarningsLevel
 
 from core.settings import Settings
 
-from typing import Type, Optional, Tuple
+from typing import Type, Optional, Tuple, Union
 
 import warnings
 
@@ -12,8 +12,8 @@ def warning(
     auto_correct: str,
     warning: Type[Warning]=Warning,
     exception: Type[Exception]=Exception,
-    warning_levels: Optional[Tuple[WarningsLevel]]=None,
-    exception_levels: Optional[Tuple[WarningsLevel]]=None
+    warning_levels: Optional[Union[Tuple[WarningsLevel, ...], Tuple[None]]]=None,
+    exception_levels: Optional[Union[Tuple[WarningsLevel, ...], Tuple[None]]]=None
 ) -> None:
     """Warning or exception in validators."""
     if settings.warnings_level in (warning_levels or (WarningsLevel.Basic,)):
