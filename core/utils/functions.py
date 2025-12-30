@@ -16,11 +16,11 @@ def warning(
     exception_levels: Optional[Tuple[WarningsLevel]]=None
 ) -> None:
     """Warning or exception in validators."""
-    if settings.warnings_level in (warning_levels or ()):
+    if settings.warnings_level in (warning_levels or (WarningsLevel.Basic,)):
         warnings.warn(
-            message + auto_correct,
+            message + ' ' + auto_correct,
             warning,
             stacklevel=2
         )
-    elif settings.warnings_level in (exception_levels or ()):
+    elif settings.warnings_level in (exception_levels or (WarningsLevel.Strict,)):
         raise exception(message)
