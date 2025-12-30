@@ -26,7 +26,7 @@ class ConfigValidator:
             if version not in ConfigVersions:
                 warning(
                     settings,
-                    Strings.INVALID_CONFIG_VERSION.substitute(version=version),
+                    Strings.INVALID_CONFIG_VERSION.substitute(version=repr(version)),
                     Strings.AUTO_CORRECT_TO_LATEST,
                     ConfigValuesWarning,
                     ValueError
