@@ -20,7 +20,7 @@ def warning(
         warnings.warn(
             message + ' ' + auto_correct,
             warning,
-            stacklevel=2
+            stacklevel=3
         )
     elif settings.warnings_level in (exception_levels or (WarningsLevel.Strict,)):
         raise exception(message)
