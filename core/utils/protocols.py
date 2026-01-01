@@ -9,7 +9,7 @@ class IOReaderMixin(Protocol):
     """Protocol for all IOReader mixins."""
 
     @staticmethod
-    def read(file_path: str) -> UnknownConfigType: ...
+    def read(settings: Settings, file_path: str) -> UnknownConfigType: ...
 
 class Factoric(Protocol):
     """Factory protocol."""
