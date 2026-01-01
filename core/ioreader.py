@@ -13,7 +13,7 @@ class JSONMixin:
     """JSON extension for IOReader."""
 
     @staticmethod
-    def read(file_path: str) -> UnknownConfigType:
+    def read(settings: Settings, file_path: str) -> UnknownConfigType:
         with open(file_path, 'r', encoding='utf-8') as file:
             content: UnknownConfigType = json.loads(file.read())
         return content
@@ -34,7 +34,7 @@ class IOReader():
         content: UnknownConfigType = {}
 
         if extension in IOReader._MIXINS:
-            content = IOReader._MIXINS[extension].read(file_path)
+            content: UnknownConfigType = IOReader._MIXINS[extension].read(settings, file_path)
         
         return content
 
