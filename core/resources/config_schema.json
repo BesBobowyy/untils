@@ -1,0 +1,101 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "`mplib` commands config schema.",
+    "description": "Schema for the commands config in `mplib`.",
+    "type": "object",
+    "properties": {
+        "version": {
+            "description": "Config version. Supported format: [1].",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 1
+        },
+        "states": {
+            "description": "Config states, which controls available root commands from API.",
+            "type": "object",
+            "patternProperties": {
+                "^\\W{0}__[a-zA-Z\\-]+__\\W{0}$": {
+                    "$ref": "#/$defs/state"
+                },
+                "^\\W{0}[\\w\\-]+\\W{0}$": {
+                    "$ref": "#/$defs/state"
+                }
+            },
+            "additionalProperties": true
+        },
+        "commands": {
+            "type": "object",
+            "patternProperties": {
+                "^\\W{0}\\$?[\\w\\-]+\\W{0}$": {
+                    "$ref": "#/$defs/command"
+                }
+            }
+        }
+    },
+    "$defs": {
+        "state": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            },
+            "uniqueItems": true
+        },
+        "command": {
+            "type": "object",
+            "properties": {
+                "aliases": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "pattern": "^\\W{0}[\\w\\-]+\\W{0}$"
+                    },
+                    "uniqueItems": true,
+                    "minItems": 1
+                },
+                "type": {
+                    "enum": ["word", "fallback", "flag", "option"]
+                },
+                "default": {
+                    "type": ["array", "boolean", "integer", "null", "number", "object", "string"]
+                },
+                "children": {
+                    "type": "object",
+                    "patternProperties": {
+                        "^\\$?[\\w\\-]+\\W{0}$": {
+                            "$ref": "#/$defs/command"
+                        }
+                    },
+                    "minProperties": 1
+                }
+            },
+            "required": ["type"],
+            "dependentSchemas": {
+                "aliases": {
+                    "required": ["type"],
+                    "properties": {
+                        "type": {
+                            "enum": ["word", "flag", "option"]
+                        }
+                    }
+                },
+                "default": {
+                    "required": ["type"],
+                    "properties": {
+                        "type": {
+                            "enum": ["fallback", "flag", "option"]
+                        }
+                    }
+                },
+                "children": {
+                    "required": ["type"],
+                    "properties": {
+                        "type": {
+                            "enum": ["word", "fallback"]
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "required": ["version", "states", "commands"]
+}
