@@ -6,7 +6,7 @@ from core.utils.type_aliases import (
     CommandStates, InternalCommandStates
 )
 from core.utils.enums import ConfigVersions, WarningsLevel
-from core.utils.lib_warnings import ConfigStructureWarning, ConfigValuesWarning
+from core.utils.lib_warnings import ConfigStructureWarning, ConfigValuesWarning, ConfigStructureError, ConfigValuesError
 from core.utils.constants import Constants, Strings
 from core.utils.functions import warning
 
@@ -34,7 +34,7 @@ class ConfigValidator:
                     Strings.INVALID_CONFIG_VERSION.substitute(version=repr(version)),
                     Strings.AUTO_CORRECT_TO_LATEST,
                     ConfigValuesWarning,
-                    ValueError
+                    ConfigValuesError
                 )
         else:
             warning(
@@ -42,7 +42,7 @@ class ConfigValidator:
                 Strings.INVALID_CONFIG_VERSION.substitute(version=Strings.UNKNOWN_VERSION),
                 Strings.AUTO_CORRECT_TO_LATEST,
                 ConfigStructureWarning,
-                KeyError
+                ConfigStructureError
             )
             version = Constants.LATEST_CONFIG_VERSION.value
 
@@ -61,7 +61,7 @@ class ConfigValidator:
                     Strings.COMMAND_INVALID_TYPE,
                     Strings.AUTO_CORRECT_WITH_SKIPPING,
                     ConfigValuesWarning,
-                    ValueError
+                    ConfigValuesError
                 )
         else:
             warning(
@@ -69,7 +69,7 @@ class ConfigValidator:
                 Strings.COMMAND_UNKNOWN_TYPE,
                 ' ' + Strings.AUTO_CORRECT_WITH_SKIPPING,
                 ConfigValuesWarning,
-                KeyError
+                ConfigValuesError
             )
         
         return command_type
@@ -85,7 +85,7 @@ class ConfigValidator:
                     Strings.COMMAND_INVALID_ALIASES,
                     Strings.AUTO_CORRECT_TO_DEFAULTS,
                     ConfigStructureWarning,
-                    TypeError
+                    ConfigStructureError
                 )
             else:
                 for alias in command_dict["aliases"]:
@@ -95,7 +95,7 @@ class ConfigValidator:
                             Strings.COMMAND_ALIAS_INVALID.substitute(alias=alias),
                             Strings.AUTO_CORRECT_WITH_CASTING,
                             ConfigValuesWarning,
-                            TypeError
+                            ConfigValuesError
                         )
                         alias = str(alias)
 
@@ -105,7 +105,7 @@ class ConfigValidator:
                             Strings.COMMAND_ALIAS_COPIED.substitute(alias=alias),
                             Strings.AUTO_CORRECT_WITH_SKIPPING,
                             ConfigValuesWarning,
-                            ValueError
+                            ConfigValuesError
                         )
                     
                     aliases.append(alias)
@@ -137,7 +137,7 @@ class ConfigValidator:
                 Strings.COMMAND_INVALID_TYPE,
                 Strings.AUTO_CORRECT_WITH_SKIPPING,
                 ConfigStructureWarning,
-                KeyError
+                ConfigStructureError
             )
             return None
 
@@ -149,7 +149,7 @@ class ConfigValidator:
                 Strings.COMMAND_INVALID_TYPE,
                 Strings.AUTO_CORRECT_WITH_SKIPPING,
                 ConfigStructureWarning,
-                KeyError
+                ConfigStructureError
             )
             return None
 
@@ -174,7 +174,7 @@ class ConfigValidator:
                         Strings.COMMAND_INVALID_CHILDREN,
                         Strings.AUTO_CORRECT_WITH_REMOVING,
                         ConfigValuesWarning,
-                        ValueError
+                        ConfigValuesError
                     )
         if command_type not in ("word", "fallback") and "children" in command_dict:
             warning(
@@ -182,7 +182,7 @@ class ConfigValidator:
                 Strings.COMMAND_INVALID_TYPE,
                 Strings.AUTO_CORRECT_WITH_SKIPPING,
                 ConfigStructureWarning,
-                KeyError
+                ConfigStructureError
             )
             return None
         
@@ -196,7 +196,7 @@ class ConfigValidator:
                 Strings.COMMAND_NAME_EMPTY,
                 Strings.AUTO_CORRECT_WITH_REMOVING,
                 ConfigValuesWarning,
-                NameError
+                ConfigValuesError
             )
             ConfigValidator.empty_name_replace_index += 1
             return f"command+{ConfigValidator.empty_name_replace_index}"
@@ -215,7 +215,7 @@ class ConfigValidator:
                     Strings.COMMAND_NAME_STARTS_INVALID,
                     Strings.AUTO_CORRECT_WITH_REMOVING,
                     ConfigValuesWarning,
-                    NameError
+                    ConfigValuesError
                 )
                 removing_indexes.append(i)
             elif name[i] in specials:
@@ -230,7 +230,7 @@ class ConfigValidator:
                         Strings.STATE_INTERNAL_NAME_INVALID.substitute(length=(i - start)),
                         Strings.AUTO_CORRECT_TO_DEFAULTS,
                         ConfigValuesWarning,
-                        NameError
+                        ConfigValuesError
                     )
                     name = name[:start] + "__" + name[i:]
                     i = start + 2
@@ -247,7 +247,7 @@ class ConfigValidator:
                             Strings.COMMAND_FALLBACK_DOLLAR_MISPOSITION,
                             Strings.AUTO_CORRECT_WITH_REMOVING,
                             ConfigValuesWarning,
-                            NameError
+                            ConfigValuesError
                         )
                         found_dollar = True
                         name = name[:i] + name[i + 1:]
@@ -260,7 +260,7 @@ class ConfigValidator:
                             Strings.COMMAND_FALLBACK_DOLLAR_OVERLOAD,
                             Strings.AUTO_CORRECT_WITH_REMOVING,
                             ConfigValuesWarning,
-                            NameError
+                            ConfigValuesError
                         )
                         name = name[:i] + name[i + 1:]
                         i += 1
@@ -271,7 +271,7 @@ class ConfigValidator:
                     Strings.COMMAND_NAME_SPECIAL.substitute(character=name[i]),
                     Strings.AUTO_CORRECT_WITH_REMOVING,
                     ConfigValuesWarning,
-                    NameError
+                    ConfigValuesError
                 )
                 removing_indexes.append(i)
             elif name[i].isalnum():
@@ -282,7 +282,7 @@ class ConfigValidator:
                     Strings.UNKNOWN_CHARACTER.substitute(character=name[i]),
                     Strings.AUTO_CORRECT_WITH_SKIPPING,
                     ConfigValuesWarning,
-                    NameError
+                    ConfigValuesError
                 )
 
             i += 1
@@ -329,7 +329,7 @@ class ConfigValidator:
                                         Strings.COMMAND_ALIAS_COPIED.substitute(alias=alias),
                                         Strings.AUTO_CORRECT_WITH_REMOVING,
                                         ConfigValuesWarning,
-                                        ValueError
+                                        ConfigValuesError
                                     )
                                 elif alias == key:
                                     warning(
@@ -337,7 +337,7 @@ class ConfigValidator:
                                         Strings.COMMAND_ALIAS_REDUNDANCY.substitute(alias=alias),
                                         Strings.AUTO_CORRECT_WITH_REMOVING,
                                         ConfigValuesWarning,
-                                        ValueError
+                                        ConfigValuesError
                                     )
                                 else:
                                     used_aliases.append(alias)
@@ -353,7 +353,7 @@ class ConfigValidator:
                     Strings.INVALID_CONFIG_COMMANDS,
                     Strings.AUTO_CORRECT_TO_DEFAULTS,
                     ConfigStructureWarning,
-                    TypeError
+                    ConfigStructureError
                 )
         else:
             warning(
@@ -361,7 +361,7 @@ class ConfigValidator:
                 Strings.INVALID_CONFIG_COMMANDS,
                 Strings.AUTO_CORRECT_TO_DEFAULTS,
                 ConfigStructureWarning,
-                KeyError
+                ConfigStructureError
             )
             
         return commands
@@ -411,7 +411,7 @@ class ConfigValidator:
                             Strings.STATE_INVALID_NAME,
                             Strings.AUTO_CORRECT_WITH_RENAMING,
                             ConfigValuesWarning,
-                            NameError
+                            ConfigValuesError
                         )
                         state = state[:2] + state[2:-2]
 
@@ -426,7 +426,7 @@ class ConfigValidator:
                                 Strings.COMMAND_UNKNOWN_NAME,
                                 Strings.AUTO_CORRECT_WITH_SKIPPING,
                                 ConfigValuesWarning,
-                                NameError
+                                ConfigValuesError
                             )
                         else:
                             states[state].append(name)
@@ -436,7 +436,7 @@ class ConfigValidator:
                     Strings.INVALID_CONFIG_STATES,
                     Strings.AUTO_CORRECT_TO_DEFAULTS,
                     ConfigStructureWarning,
-                    TypeError
+                    ConfigStructureError
                 )
         else:
             warning(
@@ -444,7 +444,7 @@ class ConfigValidator:
                 Strings.INVALID_CONFIG_STATES,
                 Strings.AUTO_CORRECT_TO_DEFAULTS,
                 ConfigStructureWarning,
-                KeyError
+                ConfigStructureError
             )
             states["__base__"] = command_names
 
