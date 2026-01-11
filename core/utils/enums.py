@@ -1,5 +1,17 @@
 from enum import IntEnum, Enum
 
+class LibraryVersionStatus(IntEnum):
+    """The library version status: \"Development\", \"Alpha\", \"Beta\" or \"Release\"."""
+
+    d = 0
+    """Development."""
+    a = 1
+    """Alpha."""
+    b = 2
+    """Beta."""
+    r = 3
+    """Release."""
+
 class WarningsLevel(IntEnum):
     """Controls, how much errors affect on code flow."""
 
