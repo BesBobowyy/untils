@@ -4,9 +4,9 @@ from core.commands_config import CommandsConfig
 from core.settings import Settings
 from core.processor import Processor
 from core.input_validator import ParsedInputValidator
-from core.command import CommandNode
+from core.command import CommandNode, CommandWordNode, CommandFallbackNode
 
-from typing import Optional, List
+from typing import Optional, List, Union, Tuple, cast
 
 class CommandSystem:
     """Core class with command config, API, processing and much more."""
@@ -38,6 +38,30 @@ class CommandSystem:
         if self.config is not None:
             return ParsedInputValidator.validate_input_dict(self.settings, input_dict, self.config)
         return False
+    
+    def get_normalized_path(self, input_dict: InputDict) -> List[str]:
+        if self.config is None:
+            return []
+
+        input_path: List[str] = input_dict["path"]
+        commands: List[CommandNode] = self.config.commands
+        result: List[str] = []
+
+        for part in input_path:
+            for command in commands:
+                if command.type == "word":
+                    command = cast(CommandWordNode, command)
+                    if part == command.name or part in [alias.alias_name for alias in command.aliases]:
+                        result.append(command.name)
+                        commands = command.children
+                        break
+                elif command.type == "fallback":
+                    command = cast(CommandFallbackNode, command)
+                    result.append(command.name)
+                    commands = command.children
+                    break
+        
+        return result
     
     def get_all_commands(self) -> List[CommandNode]:
         if self.config is None: return []
@@ -86,3 +110,35 @@ class CommandSystem:
                         result.append(command.name)
         
         return result
+    
+    def access_path(
+        self,
+        input_dict: Union[InputDict, List[str]],
+        path: List[Union[str, List[str], Tuple[str, ...]]],
+        is_inclusive: bool=True
+    ) -> bool:
+        if isinstance(input_dict, dict):
+            input_path: List[str] = input_dict["path"]
+        elif type(input_dict) == list:
+            input_path: List[str] = input_dict
+        else:
+            return False
+        
+        if is_inclusive and len(path) != len(input_path):
+            return False
+        
+        i: int = 0
+        for part in path:
+            if i >= len(input_path):
+                return True
+
+            if type(part) == str:
+                if input_path[i] == part or part == "-any":
+                    i += 1
+                    continue
+            elif type(part) in (list, tuple):
+                if input_path[i] in part:
+                    i += 1
+                    continue
+            return False
+        return True
