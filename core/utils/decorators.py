@@ -8,8 +8,8 @@ FuncType = TypeVar("FuncType", bound=Callable[..., Any])
 import warnings
 
 def deprecated(
-        version: str = Strings.UNKNOWN_VERSION,
-        reason: str = Strings.DEPRECATED_METHOD
+    version: str = Strings.UNKNOWN_VERSION,
+    reason: str = Strings.DEPRECATED_METHOD
 ) -> Callable[[FuncType], FuncType]:
     def decorator(func: FuncType) -> FuncType:
         @wraps(func)
@@ -24,8 +24,8 @@ def deprecated(
     return decorator
 
 def alternative(
-        version: str = Strings.UNKNOWN_VERSION,
-        reason: str = Strings.ALTERNATIVE_METHOD
+    version: str = Strings.UNKNOWN_VERSION,
+    reason: str = Strings.ALTERNATIVE_METHOD
 ) -> Callable[[FuncType], FuncType]:
     def decorator(func: FuncType) -> FuncType:
         @wraps(func)
