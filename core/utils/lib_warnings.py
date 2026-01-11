@@ -34,8 +34,8 @@ class ConfigValuesError(ConfigError):
 class InputError(Exception):
     """Exception class for all input validation issues."""
 
-class InputStructureError(Exception):
+class InputStructureError(InputError):
     """Input exception class for input structure issues."""
 
-class InputValuesError(Exception):
+class InputValuesError(InputError):
     """Input exception class for input values issues."""
