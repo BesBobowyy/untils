@@ -457,25 +457,3 @@ class ConfigValidator:
         states: CommandStates = ConfigValidator.validate_states(settings, config_dict, commands)
 
         return {"version": version, "states": states, "commands": commands}
-
-
-
-if __name__ == "__main__":
-    from core.utils.type_aliases import UnknownConfigType
-
-    from core.ioreader import IOReader
-
-    import os
-
-    FILE_PATH: str = os.path.join(
-        os.path.abspath(os.path.dirname(os.path.dirname(__file__))),
-        "examples",
-        "resources",
-        "commands_1.json"
-    )
-    SETTINGS: Settings = Settings()
-
-    content: UnknownConfigType = IOReader.read_file(SETTINGS, FILE_PATH)
-
-    config_raw: ConfigType = ConfigValidator.validate_config(SETTINGS, content)
-    print(config_raw)
