@@ -5,7 +5,7 @@ from core.utils.type_aliases import (
     ConfigType, UnknownConfigType, ConfigVersion, UnknownCommandClass, CommandClass, CommandType, CommandConfig_Unknown,
     CommandStates, InternalCommandStates
 )
-from core.utils.enums import ConfigVersions
+from core.utils.enums import ConfigVersions, WarningsLevel
 from core.utils.lib_warnings import ConfigStructureWarning, ConfigValuesWarning
 from core.utils.constants import Constants, Strings
 from core.utils.functions import warning
@@ -113,17 +113,10 @@ class ConfigValidator:
         return aliases
 
     @staticmethod
-    def validate_command_default(settings: Settings, command_dict: UnknownCommandClass) -> Any:
+    def validate_command_default(command_dict: UnknownCommandClass) -> Any:
         if "default" in command_dict:
             return command_dict["default"]
-        
-        warning(
-            settings,
-            Strings.COMMAND_INVALID_DEFAULT,
-            Strings.AUTO_CORRECT_TO_DEFAULTS,
-            ConfigStructureWarning,
-            KeyError
-        )
+        return None
     
     @staticmethod
     def validate_command(settings: Settings, command_dict: UnknownCommandClass) -> Optional[CommandClass]:
@@ -148,9 +141,9 @@ class ConfigValidator:
             )
             return None
 
-        if command_type in ("flag", "option"):
-            arguments["default"] = ConfigValidator.validate_command_default(settings, command_dict)
-        if command_type not in ("flag", "option") and "default" in command_dict:
+        if command_type in ("fallback", "flag", "option"):
+            arguments["default"] = ConfigValidator.validate_command_default(command_dict)
+        if command_type not in ("fallback", "flag", "option") and "default" in command_dict:
             warning(
                 settings,
                 Strings.COMMAND_INVALID_TYPE,
@@ -165,6 +158,11 @@ class ConfigValidator:
 
             if "children" in command_dict:
                 for k, cd in command_dict["children"].items():
+                    k = ConfigValidator.validate_name(
+                        settings,
+                        k,
+                        is_fallback=(cd.get("type") == "fallback")
+                    )
                     child: Optional[CommandClass] = ConfigValidator.validate_command(settings, cd)
                     
                     if child is not None:
@@ -191,7 +189,7 @@ class ConfigValidator:
         return arguments    # pyright: ignore[reportReturnType] (The arguments are always correct.)
     
     @staticmethod
-    def validate_name(settings: Settings, name: str) -> str:
+    def validate_name(settings: Settings, name: str, is_state: bool=False, is_fallback: bool=False) -> str:
         if name == ''.join([" "] * len(name)):
             warning(
                 settings,
@@ -205,6 +203,7 @@ class ConfigValidator:
 
         i: int = 0
         found_letter: bool = False
+        found_dollar: bool = False
         removing_indexes: List[int] = []
         specials = set(punctuation)
         specials.add(' ')
@@ -220,6 +219,53 @@ class ConfigValidator:
                 )
                 removing_indexes.append(i)
             elif name[i] in specials:
+                if is_state and name[i] == "_":
+                    start: int = i
+                    while i < len(name) and name[i] == "_":
+                        i += 1
+                    if i - start == 2:
+                        continue
+                    warning(
+                        settings,
+                        Strings.STATE_INTERNAL_NAME_INVALID.substitute(length=(i - start)),
+                        Strings.AUTO_CORRECT_TO_DEFAULTS,
+                        ConfigValuesWarning,
+                        NameError
+                    )
+                    name = name[:start] + "__" + name[i:]
+                    i = start + 2
+                
+                if is_fallback and name[i] == "$":
+                    if i == 0:
+                        i += 1
+                        found_dollar = True
+                        continue
+
+                    if i > 0 and not found_dollar:
+                        warning(
+                            settings,
+                            Strings.COMMAND_FALLBACK_DOLLAR_MISPOSITION,
+                            Strings.AUTO_CORRECT_WITH_REMOVING,
+                            ConfigValuesWarning,
+                            NameError
+                        )
+                        found_dollar = True
+                        name = name[:i] + name[i + 1:]
+                        i += 1
+                        continue
+
+                    if found_dollar:
+                        warning(
+                            settings,
+                            Strings.COMMAND_FALLBACK_DOLLAR_OVERLOAD,
+                            Strings.AUTO_CORRECT_WITH_REMOVING,
+                            ConfigValuesWarning,
+                            NameError
+                        )
+                        name = name[:i] + name[i + 1:]
+                        i += 1
+                        continue
+
                 warning(
                     settings,
                     Strings.COMMAND_NAME_SPECIAL.substitute(character=name[i]),
@@ -230,11 +276,29 @@ class ConfigValidator:
                 removing_indexes.append(i)
             elif name[i].isalnum():
                 found_letter = True
+            else:
+                warning(
+                    settings,
+                    Strings.UNKNOWN_CHARACTER.substitute(character=name[i]),
+                    Strings.AUTO_CORRECT_WITH_SKIPPING,
+                    ConfigValuesWarning,
+                    NameError
+                )
 
             i += 1
         
         for index in reversed(removing_indexes):
             name = name[:index] + name[index + 1:]
+        
+        if is_fallback and not found_dollar:
+            warning(
+                settings,
+                Strings.COMMAND_FALLBACK_DOLLAR_NOT_FOUND,
+                '',
+                ConfigValuesWarning,
+                warning_levels=(WarningsLevel.Basic, WarningsLevel.Strict),
+                exception_levels=(None,)
+            )
         
         return name
 
@@ -246,6 +310,12 @@ class ConfigValidator:
         if "commands" in config_dict:
             if isinstance(config_dict["commands"], dict):
                 for key, command_dict in config_dict["commands"].items():
+                    key = ConfigValidator.validate_name(
+                        settings,
+                        key,
+                        is_fallback=(command_dict.get("type") == "fallback")
+                    )
+
                     command: Optional[CommandClass] = ConfigValidator.validate_command(settings, command_dict)
                     if command:
                         new_aliases: List[str] = []
@@ -333,7 +403,7 @@ class ConfigValidator:
         if "states" in config_dict:
             if isinstance(config_dict["states"], dict):
                 for state, names in config_dict["states"].items():
-                    state = ConfigValidator.validate_name(settings, state)
+                    state = ConfigValidator.validate_name(settings, state, is_state=True)
 
                     if state.startswith("__") and state.endswith("__") and state not in get_args(InternalCommandStates):
                         warning(
@@ -343,7 +413,7 @@ class ConfigValidator:
                             ConfigValuesWarning,
                             NameError
                         )
-                        state = '+' + state
+                        state = state[:2] + state[2:-2]
 
                     states[state] = []
                     
