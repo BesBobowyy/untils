@@ -21,6 +21,11 @@ class CommandNode:
     name: str
     type: CommandType
 
+    def __eq__(self, value: object) -> bool:
+        if isinstance(value, CommandNode):
+            return self.name == value.name and self.type == value.type
+        return False
+
 @dataclass(frozen=True)
 class CommandWordNode(CommandNode):
     """Command node for word type."""
@@ -67,7 +72,7 @@ class StateNode:
 
     name: str
     is_internal: bool
-    aliases: List[str]
+    commands: List[str]
 
     def __str__(self) -> str:
-        return f"StateNode[{'!' if self.is_internal else ''}{self.name}]{self.aliases}"
+        return f"StateNode[{'!' if self.is_internal else ''}{self.name}]{self.commands}"
