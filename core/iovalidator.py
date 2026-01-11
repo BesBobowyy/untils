@@ -1,6 +1,6 @@
 from core.utils.enums import WarningsLevel
 from core.utils.constants import Constants, Strings
-from core.utils.lib_warnings import FileWarning
+from core.utils.lib_warnings import FileWarning, FileError
 from core.utils.functions import warning
 
 from core.settings import Settings
@@ -31,7 +31,7 @@ class IOValidator:
                 Strings.CONFIG_FILE_NOT_EXISTS,
                 Strings.AUTO_CORRECT_WITH_SKIPPING,
                 FileWarning,
-                FileNotFoundError
+                FileError
             )
         
         return False
