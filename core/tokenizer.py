@@ -76,11 +76,3 @@ class Tokenizer:
             self.i += 1
         
         return self.result
-
-
-
-if __name__ == "__main__":
-    input_str: str = "hello\"Hello 'len'!\"  -F -!T --name \"\\\"Elen\\\"\""
-    TK: Tokenizer = Tokenizer(input_str)
-    tokens: List[RawInputToken] = TK.tokenize_input()
-    print(tokens)
