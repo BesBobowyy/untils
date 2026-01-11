@@ -317,21 +317,3 @@ class ParsedInputValidator:
         """Validate input dict with context."""
 
         return ParsedInputValidator.validate_commands_path(settings, input_dict, config)
-
-        
-
-
-
-if __name__ == "__main__":
-    from core.tokenizer import Tokenizer
-
-    TK: Tokenizer = Tokenizer("command -T --option-name option-value -F")
-    TOKENS: List[RawInputToken] = TK.tokenize_input()
-    print(f"Raw tokens: {TOKENS}.")
-
-    SETTINGS: Settings = Settings()
-
-    IV: InputValidator = InputValidator(TOKENS)
-
-    VALIDATED: List[FinalInputProtocol] = IV.validate_input(SETTINGS)
-    print(f"Validated tokens: {VALIDATED}.")
