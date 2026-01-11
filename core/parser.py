@@ -84,28 +84,3 @@ class Parser:
             "flags": flags,
             "options": options
         }
-
-
-
-if __name__ == "__main__":
-    from core.tokenizer import Tokenizer
-    from core.input_token import RawInputToken
-    from core.settings import Settings
-    from core.input_validator import InputValidator
-
-    while True:
-        INPUT_STRING: str = input("> ")
-
-        TK: Tokenizer = Tokenizer(INPUT_STRING)
-        TOKENS: List[RawInputToken] = TK.tokenize_input()
-        print(f"Raw tokens: {TOKENS}.")
-
-        SETTINGS: Settings = Settings()
-
-        IV: InputValidator = InputValidator(TOKENS)
-
-        VALIDATED: List[FinalInputProtocol] = IV.validate_input(SETTINGS)
-        print(f"Validated tokens: {VALIDATED}.")
-
-        COMMANDS: InputDict = Parser.parse_input(VALIDATED)
-        print(f"Parsed commands: {COMMANDS}.")
