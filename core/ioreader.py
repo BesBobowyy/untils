@@ -37,11 +37,3 @@ class IOReader():
             content: UnknownConfigType = IOReader._MIXINS[extension].read(settings, file_path)
         
         return content
-
-
-
-if __name__ == "__main__":
-    PATH: str = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
-    FILE_PATH: str = os.path.join(PATH, "examples", "resources", "commands_1.json")
-    print(PATH, FILE_PATH)
-    print(IOReader.read_file(Settings(), FILE_PATH))
