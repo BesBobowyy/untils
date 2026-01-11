@@ -1,4 +1,5 @@
 from core.utils.type_aliases import UnknownConfigType
+from core.utils.enums import FinalTokenType
 
 from core.settings import Settings
 
@@ -16,3 +17,9 @@ class Factoric(Protocol):
 
     @classmethod
     def create(cls, settings: Settings, *args: Any, **kwargs: Any) -> Any: ...
+
+class FinalInputProtocol(Protocol):
+    """Final input token protocol."""
+
+    type: FinalTokenType
+    value: Any
