@@ -9,7 +9,7 @@ from core.input_token import (
 )
 from core.settings import Settings
 from core.utils.functions import warning
-from core.utils.lib_warnings import InputStructureWarning, InputValuesWarning
+from core.utils.lib_warnings import InputStructureWarning, InputValuesWarning, InputStructureError, InputValuesError
 from core.commands_config import CommandsConfig
 from core.command import CommandNode, CommandWordNode, CommandFallbackNode, CommandFlagNode, CommandOptionNode
 
@@ -39,7 +39,7 @@ class InputValidator:
             Strings.END_OF_INPUT,
             Strings.AUTO_CORRECT_WITH_REMOVING,
             InputStructureWarning,
-            LookupError
+            InputStructureError
         )
     
     def cast_token(
@@ -55,7 +55,7 @@ class InputValidator:
                 Strings.END_OF_INPUT,
                 Strings.AUTO_CORRECT_WITH_ACCEPTING,
                 InputStructureWarning,
-                LookupError
+                InputStructureError
             )
     
     def validate_token_word(self) -> None:
@@ -91,7 +91,7 @@ class InputValidator:
                 Strings.EXPECTED_SYNTAX_FLAG,
                 Strings.AUTO_CORRECT_WITH_SKIPPING,
                 InputStructureWarning,
-                SyntaxError
+                InputStructureError
             )
     
     def validate_name_tokens(self) -> List[RawInputToken]:
@@ -134,7 +134,7 @@ class InputValidator:
                 Strings.OPTION_NAME_INVALID,
                 Strings.AUTO_CORRECT_WITH_SKIPPING,
                 InputStructureWarning,
-                SyntaxError
+                InputStructureError
             )
 
         self.expect_end(offset=1)  # [...][CURRENT_TOKEN][!LOOKUP!][...]
@@ -159,7 +159,7 @@ class InputValidator:
                 Strings.OPTION_VALUE_INVALID,
                 Strings.AUTO_CORRECT_WITH_SKIPPING,
                 InputStructureWarning,
-                SyntaxError
+                InputStructureError
             )
     
     def validate_token_minus(self) -> None:
@@ -220,7 +220,7 @@ class InputValidator:
                     Strings.UNKNOWN_TOKEN,
                     Strings.AUTO_CORRECT_WITH_SKIPPING,
                     InputStructureWarning,
-                    SyntaxError
+                    InputStructureError
                 )
             
             self.i += 1
@@ -278,7 +278,7 @@ class ParsedInputValidator:
                                     Strings.COMMAND_NOT_IN_CURRENT_STATE.substitute(state=settings.current_state),
                                     Strings.AUTO_CORRECT_WITH_SKIPPING,
                                     InputValuesWarning,
-                                    KeyError
+                                    InputValuesError
                                 )
                                 return False
                         
@@ -294,7 +294,7 @@ class ParsedInputValidator:
                 Strings.INPUT_PATH_INVALID.substitute(name=input_dict["path"][i]),
                 Strings.AUTO_CORRECT_WITH_SKIPPING,
                 InputValuesWarning,
-                NameError
+                InputValuesError
             )
             return False
         
