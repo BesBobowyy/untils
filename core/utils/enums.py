@@ -1,4 +1,4 @@
-from enum import IntEnum
+from enum import IntEnum, Enum
 
 class WarningsLevel(IntEnum):
     """Controls, how much errors affect on code flow."""
@@ -20,3 +20,31 @@ class ConfigVersions(IntEnum):
     """All config versions."""
 
     V1 = 1
+
+class RawTokenType(IntEnum):
+    """Raw token type."""
+
+    SPACE = 0
+    WORD = 1
+    MINUS = 2
+    NOT = 3
+    STRING = 4
+
+    def __repr__(self) -> str:
+        return self.name
+
+class FinalTokenType(IntEnum):
+    """Final token type."""
+
+    WORD = 0
+    FLAG = 1
+    OPTION = 2
+
+    def __repr__(self) -> str:
+        return self.name
+
+class InternalState(Enum):
+    """All internal states in config."""
+
+    BASE = "__base__"
+    INIT = "__init__"
