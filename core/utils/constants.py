@@ -74,6 +74,16 @@ class Strings:
     STATE_INVALID_NAME = "You cannot use internal state name format."
     """Used unknown internal state name."""
 
+    STATE_INTERNAL_NAME_INVALID: Template\
+        = Template("Expected length 2 of special internal state name character, got $length.")
+    """String: \"Expected length 2 of special internal state name character, got $length.\"
+    
+    Invalid internal state name signature.
+    
+    Placeholders:
+        $length - Length of special characters sequence.
+    """
+
     COMMAND_UNKNOWN_NAME = "Command name is not valid."
     """Command name not available."""
 
@@ -132,3 +142,53 @@ class Strings:
     Placeholders:
         $character - Special character.
     """
+
+    COMMAND_NOT_IN_CURRENT_STATE: Template = Template("Command not defined in current state '$state' or in '__base__' state.")
+    """String: \"Command not defined in current state '$state' or in '__base__' state.\"
+    
+    Placeholders:
+        $state - Current state name.
+    """
+
+    COMMAND_FALLBACK_DOLLAR_NOT_FOUND = "The `Fallback` command type may has a single `$` character in name start by the standart, but it not found."
+
+    COMMAND_FALLBACK_DOLLAR_OVERLOAD = "The `Fallback` command type has several `$` character."
+
+    COMMAND_FALLBACK_DOLLAR_MISPOSITION = "The `Fallback` command type has `$` character not in start."
+
+    UNKNOWN_CHARACTER: Template = Template("Unknown character '$character'.")
+    """String: \"Unknown character '$character'.\"
+    
+    Placeholders:
+        $character - Unknown character.
+    """
+
+    END_OF_INPUT = "End of input."
+    """Expected next token, got end of input."""
+
+    TOKEN_MINUS_OVERFLOW: Template = Template("`Minus` token count $count overflow.")
+    """String: \"`Minus` token count $count overflow.\"
+    
+    Placeholders:
+        $count - Count of tokens.
+    """
+
+    EXPECTED_TOKEN: Template = Template("Expected $expected token, got $token.")
+    """String: \"Expected $expected token, got $token.\"
+    
+    Placeholders:
+        $expected - Expected token.
+        $token - Got token.
+    """
+
+    EXPECTED_SYNTAX_FLAG = "Expected `Flag` token syntax."
+
+    EXPECTED_SYNTAX_OPTION = "Expected `Option` token syntax."
+
+    UNKNOWN_TOKEN = "Got unknown token."
+
+    OPTION_NAME_INVALID = "Option's name is not valid."
+
+    OPTION_VALUE_INVALID = "Option's value is not valid."
+
+    INPUT_PATH_INVALID: Template = Template("Command with name '$name' not found")
