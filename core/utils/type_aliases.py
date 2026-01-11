@@ -45,3 +45,8 @@ class UnknownConfigType(TypedDict):
     version: NotRequired[ConfigVersion]
     states: NotRequired[CommandStates]
     commands: NotRequired[Dict[str, UnknownCommandClass]]
+
+class InputDict(TypedDict):
+    path: List[str]
+    flags: Dict[str, Optional[bool]]
+    options: Dict[str, Any]
