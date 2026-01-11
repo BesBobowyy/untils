@@ -58,20 +58,3 @@ class Processor:
         if debug: print(f"Parsed input: {PARSED_REPRESENTATION}")
 
         return PARSED_REPRESENTATION
-
-
-
-if __name__ == "__main__":
-    from core.utils.enums import WarningsLevel    # pyright: ignore[reportUnusedImport]
-
-    import os
-
-    FILE_PATH: str = os.path.join(
-        os.path.abspath(os.path.dirname(os.path.dirname(__file__))),
-        "code_tests", "resources", "commands_2.json"
-    )
-    SETTINGS: Settings = Settings()
-    SETTINGS.warnings_level = WarningsLevel.Basic
-
-    CONFIG: CommandsConfig = Processor.load_config(SETTINGS, FILE_PATH)
-    print(CONFIG)
