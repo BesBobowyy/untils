@@ -11,6 +11,8 @@ def deprecated(
     version: str = Strings.UNKNOWN_VERSION,
     reason: str = Strings.DEPRECATED_METHOD
 ) -> Callable[[FuncType], FuncType]:
+    """Deprecated method decorator."""
+
     def decorator(func: FuncType) -> FuncType:
         @wraps(func)
         def wrapper(*args: Any, **kwargs: Any) -> Any:
@@ -27,6 +29,8 @@ def alternative(
     version: str = Strings.UNKNOWN_VERSION,
     reason: str = Strings.ALTERNATIVE_METHOD
 ) -> Callable[[FuncType], FuncType]:
+    """Alternative method decorator."""
+
     def decorator(func: FuncType) -> FuncType:
         @wraps(func)
         def wrapper(*args: Any, **kwargs: Any) -> Any:
