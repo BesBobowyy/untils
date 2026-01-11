@@ -4,7 +4,9 @@
 # ^^^^^^^ (Public imports.)
 
 from core.utils.lib_warnings import (
-    FileWarning, ConfigStructureWarning, ConfigValuesWarning, InputStructureWarning, InputValuesWarning
+    ConfigWarning, FileWarning, ConfigStructureWarning, ConfigValuesWarning, InputWarning, InputStructureWarning,
+    InputValuesWarning, ConfigError, FileError, ConfigStructureError, ConfigValuesError, InputError, InputStructureError,
+    InputValuesError
 )
 from core.utils.type_aliases import (
     ConfigVersion, CommandClass, UnknownCommandClass, CommandType, InternalCommandStates, CommandStates,
