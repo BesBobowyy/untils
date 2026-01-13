@@ -13,10 +13,21 @@ from core.input_validator import InputValidator
 from typing import List
 
 class Processor:
-    """Class for config processing."""
+    """Processor class for config processing."""
 
     @staticmethod
     def load_config(settings: Settings, file_path: str, debug: bool=False) -> CommandsConfig:
+        """Loads config.
+        
+        Args:
+            settings: The settings.
+            file_path: The file path.
+            debug: Determines debug messages display.
+        
+        Returns:
+            Validated and parsed config.
+        """
+
         if debug: print(f"--- Load config by path: {repr(file_path)} ---")
 
         ### 1. IOReader ###
@@ -38,6 +49,17 @@ class Processor:
     
     @staticmethod
     def process_input(settings: Settings, input_str: str, debug: bool=False) -> InputDict:
+        """Validates a user input.
+        
+        Args:
+            settings: The settings.
+            input_str: The user input.
+            debug: Determines debug messages display.
+
+        Returns:
+            Validated and parsed input dict.
+        """
+
         if debug: print(f"--- Processing input string: '{input_str}' ---")
 
         ### 1. Tokenizer ###
