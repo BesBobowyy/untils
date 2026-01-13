@@ -14,7 +14,26 @@ class Parser:
 
     @staticmethod
     def parse_commands(commands: Dict[str, CommandClass]) -> List[CommandNode]:
+        """Parses a command dictionary to the AST tree of command nodes.
+        
+        Args:
+            commands: The commands dictionary.
+
+        Returns:
+            Parsed AST tree of the command nodes.
+        """
+
         def parse_command(name: str, command_dict: CommandClass) -> CommandNode:
+            """Parses a single command.
+            
+            Args:
+                name: The command name.
+                command_dict: The command dictionary.
+
+            Returns:
+                The command node.
+            """
+
             command_type: CommandType = command_dict.get("type")
             aliases: List[AliasNode] = []
             default: Any = None
@@ -38,6 +57,15 @@ class Parser:
     
     @staticmethod
     def parse_states(states_dict: Dict[str, List[str]]) -> List[StateNode]:
+        """Parses states in config.
+        
+        Args:
+            states_dict: The states dictionary.
+
+        Returns:
+            The list of the state nodes.
+        """
+
         return [
             StateNode(state, state in get_args(InternalCommandStates), aliases)
             for state, aliases in states_dict.items()
@@ -45,6 +73,15 @@ class Parser:
     
     @staticmethod
     def parse_config(config_dict: ConfigType) -> CommandsConfig:
+        """Parses a validated config.
+        
+        Args:
+            config_dict: The config dictionary.
+
+        Returns:
+            The parsed config.
+        """
+
         return CommandsConfig(
             config_dict["version"],
             Parser.parse_states(config_dict["states"]),
@@ -53,6 +90,16 @@ class Parser:
     
     @staticmethod
     def parse_input(tokens: List[FinalInputProtocol], debug: bool=False) -> InputDict:
+        """Parses a user input to input dictionary.
+        
+        Args:
+            tokens: Final tokenized tokens.
+            debug: Determines debug messages display.
+
+        Returns:
+            The parsed input dictionary.
+        """
+
         if debug: print(f"Parser.parse_input(tokens={tokens}).")
 
         path: List[str] = []
