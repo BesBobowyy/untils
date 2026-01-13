@@ -21,12 +21,23 @@ class InputValidator:
     __slots__ = ["settings", "input_tokens", "result", "i", "debug"]
 
     settings: Settings
+    """The settings."""
     input_tokens: List[RawInputToken]
+    """The raw input tokens."""
     result: List[FinalInputProtocol]
+    """The result of final input tokens."""
     i: int
+    """The validation index."""
     debug: bool
+    """Determines debug messages display."""
 
     def __init__(self, input_tokens: List[RawInputToken], debug: bool=False) -> None:
+        """
+        Args:
+            input_tokens: The raw input tokens.
+            debug: Determines debug messages display.
+        """
+        
         self.settings = Settings()
         self.input_tokens = input_tokens
         self.result = []
@@ -34,6 +45,14 @@ class InputValidator:
         self.debug = debug
 
     def warning_out_of_bounce(self) -> None:
+        """Warnings out of bounce.
+        
+        Raises:
+            InputStructureWarning: Always.
+
+            InputStructureError: Always.
+        """
+
         warning(
             self.settings,
             Strings.END_OF_INPUT,
@@ -46,9 +65,29 @@ class InputValidator:
         self,
         token_object: Union[FinalInputTokenWord, FinalInputTokenFlag, FinalInputTokenOption]
     ) -> FinalInputProtocol:
+        """Casts a token to the `FinalInputProtocol`.
+        
+        Args:
+            token_object: The token.
+        
+        Returns:
+            The casted token.
+        """
+
         return cast(FinalInputProtocol, token_object)
     
     def expect_end(self, offset: int=1) -> None:
+        """Expects an end by offset.
+        
+        Args:
+            offset: The number greater than 0, which defines an index offset, that cannot be out of bounce.
+        
+        Raises:
+            InputStructureWarning: If the offset out of bounce.
+
+            InputStructureError: If the offset out of bounce.
+        """
+
         if self.i >= len(self.input_tokens) - offset:
             warning(
                 self.settings,
@@ -59,11 +98,15 @@ class InputValidator:
             )
     
     def validate_token_word(self) -> None:
+        """Validates a `Word` token."""
+
         token: RawInputToken = self.input_tokens[self.i]
         self.result.append(self.cast_token(FinalInputTokenWord(token.value)))
         self.i += 1
     
     def validate_token_flag(self) -> None:
+        """Validates a `Flag` token."""
+
         value: bool = True
 
         invert_token: RawInputToken = self.input_tokens[self.i]
@@ -95,6 +138,12 @@ class InputValidator:
             )
     
     def validate_name_tokens(self) -> List[RawInputToken]:
+        """Validates a row of tokens with type `Word` and `String` without spaces as name.
+        
+        Returns:
+            The list of name tokens.
+        """
+
         if self.debug: print("Process name tokens.")
 
         current_token: RawInputToken = self.input_tokens[self.i]
@@ -122,6 +171,8 @@ class InputValidator:
         return name_tokens
 
     def validate_token_option(self) -> None:
+        """Validates an `Option` token."""
+
         name_tokens: List[RawInputToken] = self.validate_name_tokens()
         name: str = ""
 
@@ -163,6 +214,8 @@ class InputValidator:
             )
     
     def validate_token_minus(self) -> None:
+        """Validates a `Minus` token."""
+
         start: int = self.i
 
         while self.i < len(self.input_tokens) and self.input_tokens[self.i].type == RawTokenType.MINUS:
@@ -180,6 +233,15 @@ class InputValidator:
             self.validate_token_option()
     
     def validate_input(self, settings: Settings) -> List[FinalInputProtocol]:
+        """Validates a user input.
+        
+        Args:
+            settings: The settings.
+
+        Returns:
+            The list with final validated tokens.
+        """
+
         if self.debug: print(f"InputValidator.validate_input(input_tokens='{self.input_tokens}')")
 
         self.settings = settings
@@ -232,12 +294,34 @@ class ParsedInputValidator:
 
     @staticmethod
     def validate_commands_path(settings: Settings, input_dict: InputDict, config: CommandsConfig) -> bool:
+        """Validates a commands path, flags and options.
+        
+        Args:
+            settings: The settings.
+            input_dict: The parsed input dictionary.
+            config: The parsed commands config.
+
+        Returns:
+            `True` if commands path, flags and options is valid, else `False`.
+
+        Raises:
+            InputValuesWarning: If the first command is not written in current state in the settings or path cannot be accessed to the input path.
+
+            InputValuesError: If the first command is not written in current state in the settings or path cannot be accessed to the input path.
+        """
+
         flag_keys: List[str] = list(input_dict["flags"].keys())
         option_keys: List[str] = list(input_dict["options"].keys())
         validated_flags: Dict[str, bool] = {n: False for n in flag_keys}
         validated_options: Dict[str, bool] = {n: False for n in option_keys}
 
         def validate_flags(children: List[CommandNode]) -> None:
+            """Validates the flags.
+            
+            Args:
+                children: The commands.
+            """
+
             for command in children:
                 if command.type == "flag":
                     command = cast(CommandFlagNode, command)
@@ -246,6 +330,12 @@ class ParsedInputValidator:
                         validated_flags[alias.alias_name] = True
         
         def validate_options(children: List[CommandNode]) -> None:
+            """Validates the options.
+            
+            Args:
+                children: The commands.
+            """
+
             for command in children:
                 if command.type == "option":
                     command = cast(CommandOptionNode, command)
@@ -254,6 +344,21 @@ class ParsedInputValidator:
                         validated_options[alias.alias_name] = True
         
         def validate_command(children: List[CommandNode], i: int) -> bool:
+            """Validates a command recursively.
+            
+            Args:
+                children: The commands.
+                i: Current path index.
+
+            Returns:
+                `False` if command not in current state (i == 0 -> First command) or has not children, else `True`.
+
+            Raises:
+                InputValuesWarning: If the first command is not written in current state in the settings or no commands in children in path.
+
+                InputValuesError: If the first command is not written in current state in the settings or no commands in children in path.
+            """
+
             for command in children:
                 if command.type in ("word", "fallback"):
                     command = cast(Union[CommandWordNode, CommandFallbackNode], command)
@@ -314,6 +419,15 @@ class ParsedInputValidator:
 
     @staticmethod
     def validate_input_dict(settings: Settings, input_dict: InputDict, config: CommandsConfig) -> bool:
-        """Validate input dict with context."""
+        """Validates input dict with current context in settings.
+        
+        Args:
+            settings: The settings.
+            input_dict: The input dictionary.
+            config: The parsed commands config.
+
+        Returns:
+            `True` if the input is valid, else `False`.
+        """
 
         return ParsedInputValidator.validate_commands_path(settings, input_dict, config)
