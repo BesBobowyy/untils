@@ -1,17 +1,18 @@
 from core.utils.type_aliases import UnknownConfigType, ConfigSupportedExtensions
 from core.iovalidator import IOValidator
-from core.utils.protocols import IOReaderMixin
+from core.utils.protocols import IOReaderMixin, IOReaderProtocol
 
 from core.settings import Settings
 
-from typing import Dict
+from typing import Dict, override
 
 import json
 import os
 
-class JSONMixin:
-    """JSON extension for IOReader."""
+class JSONMixin(IOReaderMixin):
+    """The JSON extension for `IOReader`."""
 
+    @override
     @staticmethod
     def read(settings: Settings, file_path: str) -> UnknownConfigType:
         with open(file_path, 'r', encoding='utf-8') as file:
@@ -19,15 +20,26 @@ class JSONMixin:
         return content
 
 class IOReader():
-    """This class works with config files in supported formats."""
+    """Reader class for config loading by paths and settings."""
 
-    _MIXINS: Dict[ConfigSupportedExtensions, IOReaderMixin] = {
+    _MIXINS: Dict[ConfigSupportedExtensions, IOReaderProtocol] = {
         ".json": JSONMixin,
         ".json5": JSONMixin
     }
+    """All supported mixins for `IOReader`."""
 
     @staticmethod
-    def read_file(settings: Settings, file_path: str):
+    def read_file(settings: Settings, file_path: str) -> UnknownConfigType:
+        """Reads a config file by path.
+        
+        Args:
+            settings: The settings.
+            file_path: The file path.
+
+        Returns:
+            The raw unvalidated config.
+        """
+
         IOValidator.validate_config_path(settings, file_path)
 
         extension: str = os.path.splitext(file_path)[1]
