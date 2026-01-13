@@ -5,7 +5,7 @@ from core.utils.constants import Strings
 from typing import Union
 
 class Settings:
-    """ContextSettings."""
+    """The global context settings."""
 
     __slots__ = ["__warnings_level", "__current_state"]
 
@@ -23,7 +23,7 @@ class Settings:
     
     @property
     def current_state(self) -> str:
-        """Current commands context state."""
+        """Current commands state."""
         return self.__current_state
 
     @current_state.setter
@@ -39,8 +39,22 @@ class Settings:
 
     @alternative(version=Strings.ANY_VERSION)
     def get_warnings_level(self) -> WarningsLevel:
+        """[!ALT] Get a warnings level.\n
+        <This method is alternative for the standart. In real product use the property `Settings.warnings_level`.>
+        
+        Returns:
+            The current warnings level.
+        """
+
         return self.__warnings_level
     
     @alternative(version=Strings.ANY_VERSION)
     def set_warnings_level(self, warnings_level: WarningsLevel=WarningsLevel.Strict) -> None:
+        """[!ALT] Sets a warnings level.\n
+        <This method is alternative for the standart. In real product use the property `Settings.warnings_level`.>
+        
+        Args:
+            warnings_level: The warnings level.
+        """
+
         self.__warnings_level = warnings_level
