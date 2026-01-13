@@ -6,20 +6,24 @@ from dataclasses import dataclass
 
 @dataclass(frozen=True)
 class AliasNode():
-    """Alias node for another naming of commands."""
+    """Command alias name container."""
 
     original_name: str
+    """Original command name."""
     alias_name: str
+    """Alias name."""
 
     def __str__(self) -> str:
         return f"AliasNode('{self.original_name}' -> '{self.alias_name}')"
 
 @dataclass(frozen=True)
 class CommandNode:
-    """Command node in command hierarchy."""
+    """Universal template for command nodes."""
 
     name: str
+    """Command name."""
     type: CommandType
+    """Command type."""
 
     def __eq__(self, value: object) -> bool:
         if isinstance(value, CommandNode):
@@ -28,10 +32,12 @@ class CommandNode:
 
 @dataclass(frozen=True)
 class CommandWordNode(CommandNode):
-    """Command node for word type."""
+    """The word command type."""
 
-    aliases: List['AliasNode']
+    aliases: List[AliasNode]
+    """Command aliases."""
     children: List[CommandNode]
+    """Next commands below this."""
 
     def __str__(self) -> str:
         return f"CommandWordNode[{self.name} : {self.aliases}]{self.children}"
@@ -41,7 +47,9 @@ class CommandFallbackNode(CommandNode):
     """Command node for fallback type."""
 
     default: Any
+    """A default value."""
     children: List[CommandNode]
+    """Next commands below this."""
 
     def __str__(self) -> str:
         return f"CommandFallbackNode[{self.name}](default={repr(self.default)}){self.children}"
@@ -50,8 +58,10 @@ class CommandFallbackNode(CommandNode):
 class CommandFlagNode(CommandNode):
     """Command node for flag type."""
 
-    aliases: List['AliasNode']
+    aliases: List[AliasNode]
+    """Command aliases."""
     default: Any
+    """A default value."""
     
     def __str__(self) -> str:
         return f"CommandFlagNode[{self.name} : {self.aliases}](default={repr(self.default)})"
@@ -60,19 +70,24 @@ class CommandFlagNode(CommandNode):
 class CommandOptionNode(CommandNode):
     """Command node for option type."""
 
-    aliases: List['AliasNode']
+    aliases: List[AliasNode]
+    """Command aliases."""
     default: Any
+    """A default value."""
 
     def __str__(self) -> str:
         return f"CommandOptionNode[{self.name} : {self.aliases}](default={repr(self.default)})"
 
 @dataclass(frozen=True)
 class StateNode:
-    """State node for states."""
+    """A state node in config."""
 
     name: str
+    """The state name."""
     is_internal: bool
+    """Is internal state, which typed in the format `__{name}__`."""
     commands: List[str]
+    """Allowed commands by this state."""
 
     def __str__(self) -> str:
         return f"StateNode[{'!' if self.is_internal else ''}{self.name}]{self.commands}"
