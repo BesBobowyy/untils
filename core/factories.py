@@ -18,6 +18,16 @@ class CommandNodeFactory:
         default: Any,
         children: List[CommandNode]
     ) -> CommandNode:
+        """Creates a command node by a template.
+        
+        Args:
+            name: The command name.
+            node_type: The command type.
+            aliases: The command aliases.
+            default: The command default value.
+            children: The nest commands.
+        """
+
         if node_type == "word":
             return CommandWordNode(name, node_type, aliases, children)
         elif node_type == "fallback":
