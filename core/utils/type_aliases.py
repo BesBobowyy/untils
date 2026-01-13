@@ -1,4 +1,4 @@
-from typing import TypeAlias, Dict, Literal, TypedDict, List, Union, Any, Optional, NotRequired
+from typing import TypeAlias, Dict, Literal, TypedDict, List, Union, Any, Optional, NotRequired, Tuple, Callable
 
 ConfigVersion: TypeAlias = Literal[1]
 CommandClass: TypeAlias = Union[
@@ -9,6 +9,11 @@ CommandType: TypeAlias = Literal["word", "fallback", "flag", "option"]
 InternalCommandStates: TypeAlias = Literal["__base__", "__init__"]
 CommandStates: TypeAlias = Dict[Union[InternalCommandStates, str], List[str]]
 ConfigSupportedExtensions: TypeAlias = Literal[".json", ".json5"]
+CommandPath: TypeAlias = Union[
+    List[Union[str, List[str], Tuple[str, ...]]],
+    Tuple[Union[str, List[str], Tuple[str, ...]], ...]
+]
+CallableCommand: TypeAlias = Callable[[str, 'InputDict'], None]
 
 class CommandConfig_Unknown(TypedDict):
     aliases: NotRequired[List[str]]
