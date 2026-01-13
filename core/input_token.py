@@ -6,10 +6,12 @@ from dataclasses import dataclass
 
 @dataclass(frozen=True)
 class RawInputToken:
-    """Raw input token for Tokenizer."""
+    """The raw input token for `Tokenizer`."""
 
     type: RawTokenType
+    """The raw command type."""
     value: str
+    """The raw value."""
 
     def __repr__(self) -> str:
         return f"RawInputToken[{self.type.name}](value='{self.value}')"
@@ -17,10 +19,12 @@ class RawInputToken:
 
 
 class FinalInputTokenWord:
-    """Word type of FinalInputToken."""
+    """The word type of `FinalInputToken`."""
 
     type: Literal[FinalTokenType.WORD]
+    """The command type. Is literal."""
     value: str
+    """The command value."""
 
     def __init__(self, value: str) -> None:
         self.type = FinalTokenType.WORD
@@ -30,11 +34,14 @@ class FinalInputTokenWord:
         return f"FinalInputTokenWord(value={self.value})"
 
 class FinalInputTokenFlag:
-    """Flag type of FinalInputToken."""
+    """The flag type of `FinalInputToken`."""
 
     type: Literal[FinalTokenType.FLAG]
+    """The command type. Is literal."""
     name: str
+    """The command name."""
     value: bool
+    """The command value."""
 
     def __init__(self, name: str, value: bool) -> None:
         self.type = FinalTokenType.FLAG
@@ -45,11 +52,14 @@ class FinalInputTokenFlag:
         return f"FinalInputTokenFlag(name={self.name}, value={self.value})"
 
 class FinalInputTokenOption:
-    """Option type of FinalInputToken."""
+    """The option type of `FinalInputToken`."""
 
     type: Literal[FinalTokenType.OPTION]
+    """The command type. Is literal."""
     name: str
+    """The command name."""
     value: Any
+    """The command value."""
 
     def __init__(self, name: str, value: Any) -> None:
         self.type = FinalTokenType.OPTION
