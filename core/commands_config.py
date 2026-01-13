@@ -8,11 +8,14 @@ from dataclasses import dataclass
 
 @dataclass(frozen=True)
 class CommandsConfig:
-    """Immutable class for configs."""
+    """Configuration class."""
 
     version: ConfigVersion
+    """The configuration version. All supported versions are defined in `ConfigVersions`. The latest version is defined in `Constants.LATEST_CONFIG_VERSION`."""
     states: List[StateNode]
+    """All written states. Use states for context separation."""
     commands: List[CommandNode]
+    """All available commands for user."""
     
     def __str__(self) -> str:
         return f"CommandsConfig(version={self.version}, states={self.states}, commands={self.commands})"
