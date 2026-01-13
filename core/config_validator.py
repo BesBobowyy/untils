@@ -19,10 +19,28 @@ from string import punctuation
 class ConfigValidator:
     """Validator class for config structure and semantic."""
 
-    empty_name_replace_index: int = -1
+    _empty_name_replace_index: int = -1
+    """Private variable, which uses for invalid names renaming. It prevents name duplication."""
 
     @staticmethod
     def validate_version(settings: Settings, config_dict: UnknownConfigType) -> ConfigVersion:
+        """Validates the config version.
+        
+        Args:
+            settings: The settings.
+            config_dict: The config dictionary, which was not validated yet.
+        
+        Returns:
+            `ConfigVersion` if config version is valid, else returns the latest version in `Constants.LATEST_CONFIG_VERSION`.
+
+        Raises:
+            ConfigStructureWarning: `version` field is not found in config.
+            ConfigValuesWarning: Config version is not supported or invalid.
+
+            ConfigStructureError: `version` field is not found in config.
+            ConfigValuesError: Config version is not supported or invalid.
+        """
+
         version: int = -1
 
         if "version" in config_dict:
@@ -50,6 +68,21 @@ class ConfigValidator:
     
     @staticmethod
     def validate_command_type(settings: Settings, command_dict: UnknownCommandClass) -> Optional[CommandType]:
+        """Validates a command type.
+        
+        Args:
+            settings: The settings.
+            command_dict: The command dictionary, which was not validated yet.
+        
+        Returns:
+            `CommandType` if the command type was validated successfully, else `None`.
+        
+        Raises:
+            ConfigValuesWarning: The command type field is not written.
+
+            ConfigValuesErorr: The command type is not valid or unknown.
+        """
+
         command_type: Optional[CommandType] = None
 
         if "type" in command_dict:
@@ -67,15 +100,32 @@ class ConfigValidator:
             warning(
                 settings,
                 Strings.COMMAND_UNKNOWN_TYPE,
-                ' ' + Strings.AUTO_CORRECT_WITH_SKIPPING,
-                ConfigValuesWarning,
-                ConfigValuesError
+                Strings.AUTO_CORRECT_WITH_SKIPPING,
+                ConfigStructureWarning,
+                ConfigStructureError
             )
         
         return command_type
     
     @staticmethod
     def validate_command_aliases(settings: Settings, command_dict: UnknownCommandClass) -> List[str]:
+        """Validates command aliases from a command dictionary.
+        
+        Args:
+            settings: The settings.
+            command_dict: The command dictionary, which was not validated yet.
+
+        Returns:
+            Returns validated aliases.
+
+        Raises:
+            ConfigStructureWarning: The command aliases are not written or is not list.
+            ConfigValuesWarning: An alias in the command aliases is not string or duplicates previous.
+
+            ConfigStructureError: The command aliases are not written or is not list.
+            ConfigValuesError: An alias in the command aliases is not string or duplicates previous.
+        """
+
         aliases: List[str] = []
 
         if "aliases" in command_dict:
@@ -114,12 +164,38 @@ class ConfigValidator:
 
     @staticmethod
     def validate_command_default(command_dict: UnknownCommandClass) -> Any:
+        """Validates a command default value.
+        
+        Args:
+            command_dict: The command dictionary, which was not validated yet.
+        
+        Returns:
+            `Any` if the default value is exists, else `None`.
+        """
+
         if "default" in command_dict:
             return command_dict["default"]
         return None
     
     @staticmethod
     def validate_command(settings: Settings, command_dict: UnknownCommandClass) -> Optional[CommandClass]:
+        """Validates a command dictionary.
+        
+        Args:
+            settings: The settings.
+            command_dict: The command dictionary, which was not validated yet.
+        
+        Returns:
+            `CommandClass` if command was validated successfully, else `None`. Also `None` returns if a type field is not written or required fields for this type are not written.
+        
+        Raises:
+            ConfigStructureWarning: Structure of the command is not valid.
+            ConfigValuesWarning: The command values is not valid.
+
+            ConfigStructureError: Structure of the command is not valid.
+            ConfigValuesError: The command values is not valid.
+        """
+
         command_type: Optional[CommandType] = ConfigValidator.validate_command_type(settings, command_dict)
         if command_type is None:
             return None
@@ -190,6 +266,23 @@ class ConfigValidator:
     
     @staticmethod
     def validate_name(settings: Settings, name: str, is_state: bool=False, is_fallback: bool=False) -> str:
+        """Validates an identifier name.
+        
+        Args:
+            settings: The settings.
+            name: The string name.
+            is_state: Is this validation for state.
+            is_fallback: Is this validation for the `Fallback` command type.
+
+        Returns:
+            Validated and corrected string name.
+
+        Raises:
+            ConfigValuesWarning: The name is empty, has '-' character in name start, has special characters, has invalid `InternalState` structure (if `is_state == True`), has invalid `Fallback` structure (if `is_fallback == True`) or character is not valid.
+
+            ConfigValuesError: The name is empty, has '-' character in name start, has special characters, has invalid `InternalState` structure (if `is_state == True`), has invalid `Fallback` structure (if `is_fallback == True`) or character is not valid.
+        """
+
         if name == ''.join([" "] * len(name)):
             warning(
                 settings,
@@ -198,8 +291,8 @@ class ConfigValidator:
                 ConfigValuesWarning,
                 ConfigValuesError
             )
-            ConfigValidator.empty_name_replace_index += 1
-            return f"command+{ConfigValidator.empty_name_replace_index}"
+            ConfigValidator._empty_name_replace_index += 1
+            return f"command+{ConfigValidator._empty_name_replace_index}"
 
         i: int = 0
         found_letter: bool = False
@@ -210,6 +303,7 @@ class ConfigValidator:
         specials.remove('-')
         while i < len(name):
             if name[i] == '-' and not found_letter:
+                # '-' as invalid separator.
                 warning(
                     settings,
                     Strings.COMMAND_NAME_STARTS_INVALID,
@@ -219,7 +313,9 @@ class ConfigValidator:
                 )
                 removing_indexes.append(i)
             elif name[i] in specials:
+                # Character is special.
                 if is_state and name[i] == "_":
+                    # Internal state name validation.
                     start: int = i
                     while i < len(name) and name[i] == "_":
                         i += 1
@@ -236,6 +332,7 @@ class ConfigValidator:
                     i = start + 2
                 
                 if is_fallback and name[i] == "$":
+                    # `Fallback` type standart.
                     if i == 0:
                         i += 1
                         found_dollar = True
@@ -275,8 +372,10 @@ class ConfigValidator:
                 )
                 removing_indexes.append(i)
             elif name[i].isalnum():
+                # Character is valid.
                 found_letter = True
             else:
+                # Character is unknown.
                 warning(
                     settings,
                     Strings.UNKNOWN_CHARACTER.substitute(character=name[i]),
@@ -287,10 +386,12 @@ class ConfigValidator:
 
             i += 1
         
+        # Deleting the removing character.
         for index in reversed(removing_indexes):
             name = name[:index] + name[index + 1:]
         
         if is_fallback and not found_dollar:
+            # The `Fallback` standart warning.
             warning(
                 settings,
                 Strings.COMMAND_FALLBACK_DOLLAR_NOT_FOUND,
@@ -304,12 +405,30 @@ class ConfigValidator:
 
     @staticmethod
     def validate_commands(settings: Settings, config_dict: UnknownConfigType) -> Dict[str, CommandClass]:
+        """Validates commands in the config field `commands`.
+        
+        Args:
+            settings: The settings.
+            config_dict: The config dictionary, which was not validated yet.
+
+        Returns:
+            Validated commands in stable and known format.
+
+        Raises:
+            ConfigStructureWarning: The `commands` field is not written or not dict.
+            ConfigValuesWarning: Command aliases are duplicating or equals original command name.
+
+            ConfigStructureError: The `commands` field is not written or not dict.
+            ConfigValuesError: Command aliases are duplicating or equals original command name.
+        """
+
         commands: Dict[str, CommandClass] = {}
         used_aliases: List[str] = []
 
         if "commands" in config_dict:
             if isinstance(config_dict["commands"], dict):
                 for key, command_dict in config_dict["commands"].items():
+                    # Processing a branch of command.
                     key = ConfigValidator.validate_name(
                         settings,
                         key,
@@ -321,6 +440,7 @@ class ConfigValidator:
                         new_aliases: List[str] = []
                         if "aliases" in command_dict:
                             for alias in command_dict["aliases"]:
+                                # Processing an alias in the command aliases.
                                 alias = ConfigValidator.validate_name(settings, alias)
 
                                 if alias in used_aliases:
@@ -368,7 +488,7 @@ class ConfigValidator:
     
     @staticmethod
     def get_command_keys(commands: Dict[str, CommandClass]) -> List[str]:
-        # Unused method, but may help in future. #
+        # Unused method, but may help in future or accessed by API. #
 
         def process_command(command: CommandClass) -> List[str]:
             command_keys: List[str] = []
@@ -396,6 +516,24 @@ class ConfigValidator:
         config_dict: UnknownConfigType,
         commands: Dict[str, CommandClass]
     ) -> CommandStates:
+        """Validates config states.
+        
+        Args:
+            settings: The settings.
+            config_dict: The config dictionary, which was not validated yet.
+            commands: The proccessed commands dict.
+
+        Returns:
+            Validated command states.
+
+        Raises:
+            ConfigStructureWarning: The config has not the field `states` or the states type is not dict.
+            ConfigValuesWarning: An internal state by format is not written in `InternalCommandStates` or a command name is unknown.
+
+            ConfigStructureError: The config has not the field `states` or the states type is not dict.
+            ConfigValuesError: An internal state by format is not written in `InternalCommandStates` or a command name is unknown.
+        """
+
         states: CommandStates = {}
 
         command_names: List[str] = [key for key in commands.keys()]
@@ -403,9 +541,11 @@ class ConfigValidator:
         if "states" in config_dict:
             if isinstance(config_dict["states"], dict):
                 for state, names in config_dict["states"].items():
+                    # Proccessing a state with their command names.
                     state = ConfigValidator.validate_name(settings, state, is_state=True)
 
                     if state.startswith("__") and state.endswith("__") and state not in get_args(InternalCommandStates):
+                        # An internal state is not written in `InternalCommandStates`.
                         warning(
                             settings,
                             Strings.STATE_INVALID_NAME,
@@ -418,9 +558,11 @@ class ConfigValidator:
                     states[state] = []
                     
                     for name in names:
+                        # Processing a command in the state.
                         name = ConfigValidator.validate_name(settings, name)
 
                         if name not in command_names:
+                            # Unknown command name.
                             warning(
                                 settings,
                                 Strings.COMMAND_UNKNOWN_NAME,
@@ -452,6 +594,16 @@ class ConfigValidator:
     
     @staticmethod
     def validate_config(settings: Settings, config_dict: UnknownConfigType) -> ConfigType:
+        """Validates a raw config.
+        
+        Args:
+            settings: The settings.
+            config_dict: The config dictionary, which was not validated yet.
+
+        Returns:
+            Validated config.
+        """
+
         version: ConfigVersion = ConfigValidator.validate_version(settings, config_dict)
         commands: Dict[str, CommandClass] = ConfigValidator.validate_commands(settings, config_dict)
         states: CommandStates = ConfigValidator.validate_states(settings, config_dict, commands)
