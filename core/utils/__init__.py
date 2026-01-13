@@ -11,7 +11,7 @@ from core.utils.lib_warnings import (
 from core.utils.type_aliases import (
     ConfigVersion, CommandClass, UnknownCommandClass, CommandType, InternalCommandStates, CommandStates,
     ConfigSupportedExtensions, CommandConfig_Unknown, CommandConfig_Word, CommandConfig_Fallback, CommandConfig_Flag,
-    CommandConfig_Option, ConfigType, UnknownConfigType, InputDict
+    CommandConfig_Option, ConfigType, UnknownConfigType, InputDict, CommandPath
 )
 from core.utils.constants import Constants, Strings
 from core.utils.decorators import deprecated, alternative
