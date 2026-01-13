@@ -218,3 +218,15 @@ class Strings:
     Placeholders:
         $name - A command name.
     """
+
+    COMMAND_NOT_WRITTEN: str = "Expected a command string, got void."
+    """Expected a command string, got void."""
+
+    COMMAND_NOT_IMPLEMENTED: Template = Template("Not implemented: '$input_str'.")
+    """String: \"Not implemented: '$input_str'.\"
+    
+    Command was not implemented in `CommandSystem.route` field.
+
+    Placeholders:
+        $input_str - Input string.
+    """
