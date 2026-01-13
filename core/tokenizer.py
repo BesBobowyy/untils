@@ -4,75 +4,95 @@ from core.input_token import RawInputToken
 from typing import List, Literal, cast
 
 class Tokenizer:
-    """Tokenizer class."""
+    """Tokenizer class, which tokenize a user input."""
 
-    __slots__ = ["input_str", "result", "i", "debug"]
+    __slots__ = ["_input_str", "_result", "_i", "_debug"]
 
-    input_str: str
-    result: List[RawInputToken]
-    i: int
-    debug: bool
+    _input_str: str
+    """The user input string."""
+    _result: List[RawInputToken]
+    """The processed raw tokens."""
+    _i: int
+    """Tokenize index."""
+    _debug: bool
+    """Is use debug output."""
 
     def __init__(self, input_str: str, debug: bool=False) -> None:
-        self.input_str = input_str
-        self.result = []
-        self.i = 0
-        self.debug = debug
+        """
+        Args:
+            input_str: The user input.
+            debug: Determines debug messages display.
+        """
+
+        self._input_str = input_str
+        self._result = []
+        self._i = 0
+        self._debug = debug
     
     def tokenize_string(self) -> None:
-        string_char: Literal['\'', '\"'] = cast(Literal['\'', '\"'], self.input_str[self.i])
-        self.i += 1
-        start: int = self.i
+        """Tokenizes the `String` type."""
 
-        while self.i < len(self.input_str) and self.input_str[self.i] != string_char:
-            if self.input_str[self.i] == '\\' and self.input_str[self.i + 1] == string_char:
-                self.i += 2
+        string_char: Literal['\'', '\"'] = cast(Literal['\'', '\"'], self._input_str[self._i])
+        self._i += 1
+        start: int = self._i
+
+        while self._i < len(self._input_str) and self._input_str[self._i] != string_char:
+            if self._input_str[self._i] == '\\' and self._input_str[self._i + 1] == string_char:
+                self._i += 2
             else:
-                self.i += 1
+                self._i += 1
         
-        string: str = self.input_str[start:self.i]
-        self.result.append(RawInputToken(RawTokenType.STRING, string))
-        if self.debug: print(f"String: '{string}'")
+        string: str = self._input_str[start:self._i]
+        self._result.append(RawInputToken(RawTokenType.STRING, string))
+        if self._debug: print(f"String: '{string}'")
     
     def tokenize_word(self) -> None:
-        start: int = self.i
+        """Tokenizes the `Word` type."""
 
-        while self.i < len(self.input_str) and self.input_str[self.i].isalnum():
-            self.i += 1
+        start: int = self._i
+
+        while self._i < len(self._input_str) and self._input_str[self._i].isalnum():
+            self._i += 1
         
-        word: str = self.input_str[start:self.i]
-        self.result.append(RawInputToken(RawTokenType.WORD, word))
-        if self.debug: print(f"Word: '{word}'")
+        word: str = self._input_str[start:self._i]
+        self._result.append(RawInputToken(RawTokenType.WORD, word))
+        if self._debug: print(f"Word: '{word}'")
 
     def tokenize_input(self) -> List[RawInputToken]:
-        if self.debug: print(f"Tokenizer.tokenize_input(input_str='{self.input_str}')")
+        """Tokenizes the input.
+        
+        Returns:
+            Unvalidated raw tokens.
+        """
 
-        self.result = []
-        self.i = 0
-        while self.i < len(self.input_str):
-            if self.debug: print(f"Current character: {self.input_str[self.i]}.")
+        if self._debug: print(f"Tokenizer.tokenize_input(input_str='{self._input_str}')")
 
-            if self.input_str[self.i] == ' ':
-                if self.debug: print("Process Space character.")
-                self.result.append(RawInputToken(RawTokenType.SPACE, ' '))
+        self._result = []
+        self._i = 0
+        while self._i < len(self._input_str):
+            if self._debug: print(f"Current character: {self._input_str[self._i]}.")
 
-            elif self.input_str[self.i] == '-':
-                if self.debug: print("Process Minus character.")
-                self.result.append(RawInputToken(RawTokenType.MINUS, '-'))
+            if self._input_str[self._i] == ' ':
+                if self._debug: print("Process Space character.")
+                self._result.append(RawInputToken(RawTokenType.SPACE, ' '))
 
-            if self.input_str[self.i] == '!':
-                if self.debug: print("Process Not character.")
-                self.result.append(RawInputToken(RawTokenType.NOT, '!'))
+            elif self._input_str[self._i] == '-':
+                if self._debug: print("Process Minus character.")
+                self._result.append(RawInputToken(RawTokenType.MINUS, '-'))
 
-            elif self.input_str[self.i] in ('\'', '\"'):
-                if self.debug: print("Process `String` construction.")
+            if self._input_str[self._i] == '!':
+                if self._debug: print("Process Not character.")
+                self._result.append(RawInputToken(RawTokenType.NOT, '!'))
+
+            elif self._input_str[self._i] in ('\'', '\"'):
+                if self._debug: print("Process `String` construction.")
                 self.tokenize_string()
             
-            elif self.input_str[self.i].isalnum():
-                if self.debug: print("Process `Word` construction.")
+            elif self._input_str[self._i].isalnum():
+                if self._debug: print("Process `Word` construction.")
                 self.tokenize_word()
                 continue
         
-            self.i += 1
+            self._i += 1
         
-        return self.result
+        return self._result
