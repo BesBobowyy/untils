@@ -9,10 +9,9 @@ CommandType: TypeAlias = Literal["word", "fallback", "flag", "option"]
 InternalCommandStates: TypeAlias = Literal["__base__", "__init__"]
 CommandStates: TypeAlias = Dict[Union[InternalCommandStates, str], List[str]]
 ConfigSupportedExtensions: TypeAlias = Literal[".json", ".json5"]
-CommandPath: TypeAlias = Union[
-    List[Union[str, List[str], Tuple[str, ...]]],
-    Tuple[Union[str, List[str], Tuple[str, ...]], ...]
-]
+CommandPathSection: TypeAlias = Union[Literal["-any"], str]
+CommandPathLevel: TypeAlias = Union[CommandPathSection, List[CommandPathSection], Tuple[CommandPathSection, ...]]
+CommandPath: TypeAlias = Union[List[CommandPathLevel], Tuple[CommandPathLevel, ...]]
 CallableCommand: TypeAlias = Callable[[str, 'InputDict'], None]
 
 class CommandConfig_Unknown(TypedDict):
