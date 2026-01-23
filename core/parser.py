@@ -6,6 +6,7 @@ from core.command import CommandNode, AliasNode, StateNode
 from core.factories import CommandNodeFactory
 from core.commands_config import CommandsConfig
 from core.input_token import FinalInputTokenWord, FinalInputTokenFlag, FinalInputTokenOption
+from core.settings import Settings
 
 from typing import Dict, List, Any, cast, get_args, Optional
 
@@ -89,7 +90,7 @@ class Parser:
         )
     
     @staticmethod
-    def parse_input(tokens: List[FinalInputProtocol], debug: bool=False) -> InputDict:
+    def parse_input(settings: Settings, tokens: List[FinalInputProtocol]) -> InputDict:
         """Parses a user input to input dictionary.
         
         Args:
@@ -100,7 +101,7 @@ class Parser:
             The parsed input dictionary.
         """
 
-        if debug: print(f"Parser.parse_input(tokens={tokens}).")
+        settings.logger.debug(f"Parser.parse_input(tokens={tokens}).")
 
         path: List[str] = []
         flags: Dict[str, Optional[bool]] = {}
@@ -108,20 +109,20 @@ class Parser:
 
         i: int = 0
         while i < len(tokens):
-            if debug: print(f"Iteration: {i}.")
+            settings.logger.debug(f"Iteration: {i}.")
 
             token: FinalInputProtocol = tokens[i]
 
             if token.type == FinalTokenType.WORD and isinstance(token, FinalInputTokenWord):
-                if debug: print("Process `Word` token.")
+                settings.logger.debug("Process `Word` token.")
                 path.append(token.value)
             
             elif token.type == FinalTokenType.FLAG and isinstance(token, FinalInputTokenFlag):
-                if debug: print("Process `Flag` token.")
+                settings.logger.debug("Process `Flag` token.")
                 flags[token.name] = token.value
             
             elif token.type == FinalTokenType.OPTION and isinstance(token, FinalInputTokenOption):
-                if debug: print("Process `Option` token.")
+                settings.logger.debug("Process `Option` token.")
                 options[token.name] = token.value
             
             i += 1
