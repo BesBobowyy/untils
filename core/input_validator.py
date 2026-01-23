@@ -18,32 +18,28 @@ from typing import List, Literal, cast, Union, Dict
 class InputValidator:
     """Validator class for tokenized input."""
 
-    __slots__ = ["settings", "input_tokens", "result", "i", "debug"]
+    __slots__ = ["_settings", "_input_tokens", "_result", "_i"]
 
-    settings: Settings
+    _settings: Settings
     """The settings."""
-    input_tokens: List[RawInputToken]
+    _input_tokens: List[RawInputToken]
     """The raw input tokens."""
-    result: List[FinalInputProtocol]
+    _result: List[FinalInputProtocol]
     """The result of final input tokens."""
-    i: int
+    _i: int
     """The validation index."""
-    debug: bool
-    """Determines debug messages display."""
 
-    def __init__(self, input_tokens: List[RawInputToken], debug: bool=False) -> None:
+    def __init__(self, settings: Settings, input_tokens: List[RawInputToken]) -> None:
         """
         Args:
             input_tokens: The raw input tokens.
             debug: Determines debug messages display.
         """
         
-        self.settings = Settings()
-        self.input_tokens = input_tokens
-        self.result = []
-        self.i = 0
-        self.debug = debug
-
+        self._settings = settings
+        self._input_tokens = input_tokens
+        self._result = []
+        self._i = 0
     def warning_out_of_bounce(self) -> None:
         """Warnings out of bounce.
         
@@ -54,7 +50,7 @@ class InputValidator:
         """
 
         warning(
-            self.settings,
+            self._settings,
             Strings.END_OF_INPUT,
             Strings.AUTO_CORRECT_WITH_REMOVING,
             InputStructureWarning,
@@ -88,9 +84,9 @@ class InputValidator:
             InputStructureError: If the offset out of bounce.
         """
 
-        if self.i >= len(self.input_tokens) - offset:
+        if self._i >= len(self._input_tokens) - offset:
             warning(
-                self.settings,
+                self._settings,
                 Strings.END_OF_INPUT,
                 Strings.AUTO_CORRECT_WITH_ACCEPTING,
                 InputStructureWarning,
@@ -100,23 +96,23 @@ class InputValidator:
     def validate_token_word(self) -> None:
         """Validates a `Word` token."""
 
-        token: RawInputToken = self.input_tokens[self.i]
-        self.result.append(self.cast_token(FinalInputTokenWord(token.value)))
-        self.i += 1
+        token: RawInputToken = self._input_tokens[self._i]
+        self._result.append(self.cast_token(FinalInputTokenWord(token.value)))
+        self._i += 1
     
     def validate_token_flag(self) -> None:
         """Validates a `Flag` token."""
 
         value: bool = True
 
-        invert_token: RawInputToken = self.input_tokens[self.i]
+        invert_token: RawInputToken = self._input_tokens[self._i]
         if invert_token.type == RawTokenType.NOT:
             # Invert mark.
-            if self.debug: print("Process `Not` token.")
+            self._settings.logger.debug("Process `Not` token.")
             
             value = False
             self.expect_end(offset=1)  # [...][CURRENT_TOKEN][!LOOKUP!][...]
-            self.i += 1
+            self._i += 1
         
         name_tokens: List[RawInputToken] = self.validate_name_tokens()
         name: str = ""
@@ -126,11 +122,11 @@ class InputValidator:
         
         if name != "":
             # The flag's name.
-            if self.debug: print("Process `Word` token for the flag's name.")
-            self.result.append(self.cast_token(FinalInputTokenFlag(name, value)))
+            self._settings.logger.debug("Process `Word` token for the flag's name.")
+            self._result.append(self.cast_token(FinalInputTokenFlag(name, value)))
         else:
             warning(
-                self.settings,
+                self._settings,
                 Strings.EXPECTED_SYNTAX_FLAG,
                 Strings.AUTO_CORRECT_WITH_SKIPPING,
                 InputStructureWarning,
@@ -144,29 +140,29 @@ class InputValidator:
             The list of name tokens.
         """
 
-        if self.debug: print("Process name tokens.")
+        self._settings.logger.debug("Process name tokens.")
 
-        current_token: RawInputToken = self.input_tokens[self.i]
+        current_token: RawInputToken = self._input_tokens[self._i]
         name_tokens: List[RawInputToken] = [current_token]
 
         if current_token.type == RawTokenType.STRING:
             return name_tokens
         
-        if self.i == len(self.input_tokens) - 1:
+        if self._i == len(self._input_tokens) - 1:
             return name_tokens
         
         self.expect_end(offset=1)  # [...][CURRENT_TOKEN][!LOOKUP!][...]
-        self.i += 1
+        self._i += 1
 
         while (
-            (self.i < len(self.input_tokens))
-            and (self.input_tokens[self.i].type in (RawTokenType.WORD, RawTokenType.MINUS))
+            (self._i < len(self._input_tokens))
+            and (self._input_tokens[self._i].type in (RawTokenType.WORD, RawTokenType.MINUS))
         ):
-            if self.debug: print(f"Process name token: {self.input_tokens[self.i]}.")
-            name_tokens.append(self.input_tokens[self.i])
-            self.i += 1
+            self._settings.logger.debug(f"Process name token: {self._input_tokens[self._i]}.")
+            name_tokens.append(self._input_tokens[self._i])
+            self._i += 1
 
-        if self.debug: print(f"Processed name tokens: {name_tokens}.")
+        self._settings.logger.debug(f"Processed name tokens: {name_tokens}.")
 
         return name_tokens
 
@@ -181,7 +177,7 @@ class InputValidator:
         
         if name == "":
             warning(
-                self.settings,
+                self._settings,
                 Strings.OPTION_NAME_INVALID,
                 Strings.AUTO_CORRECT_WITH_SKIPPING,
                 InputStructureWarning,
@@ -189,10 +185,10 @@ class InputValidator:
             )
 
         self.expect_end(offset=1)  # [...][CURRENT_TOKEN][!LOOKUP!][...]
-        self.i += 1
+        self._i += 1
 
-        while self.i < len(self.input_tokens) and self.input_tokens[self.i].type == RawTokenType.SPACE:
-            self.i += 1
+        while self._i < len(self._input_tokens) and self._input_tokens[self._i].type == RawTokenType.SPACE:
+            self._i += 1
 
         value_tokens: List[RawInputToken] = self.validate_name_tokens()
         value: str = ""
@@ -202,11 +198,11 @@ class InputValidator:
         
         if value != "":
             # The option's value.
-            if self.debug: print("Process `Word` or `String` token for the option's value")
-            self.result.append(self.cast_token(FinalInputTokenOption(name, value)))
+            self._settings.logger.debug("Process `Word` or `String` token for the option's value")
+            self._result.append(self.cast_token(FinalInputTokenOption(name, value)))
         else:
             warning(
-                self.settings,
+                self._settings,
                 Strings.OPTION_VALUE_INVALID,
                 Strings.AUTO_CORRECT_WITH_SKIPPING,
                 InputStructureWarning,
@@ -216,20 +212,20 @@ class InputValidator:
     def validate_token_minus(self) -> None:
         """Validates a `Minus` token."""
 
-        start: int = self.i
+        start: int = self._i
 
-        while self.i < len(self.input_tokens) and self.input_tokens[self.i].type == RawTokenType.MINUS:
-            self.i += 1
+        while self._i < len(self._input_tokens) and self._input_tokens[self._i].type == RawTokenType.MINUS:
+            self._i += 1
         
-        count: int = self.i - start
+        count: int = self._i - start
         expected_type: Literal[FinalTokenType.FLAG, FinalTokenType.OPTION]\
             = FinalTokenType.FLAG if count == 1 else FinalTokenType.OPTION
         
         if expected_type == FinalTokenType.FLAG:
-            if self.debug: print("Expected `Flag` construction.")
+            self._settings.logger.debug("Expected `Flag` construction.")
             self.validate_token_flag()
         elif expected_type == FinalTokenType.OPTION:
-            if self.debug: print("Expected `Option` construction.")
+            self._settings.logger.debug("Expected `Option` construction.")
             self.validate_token_option()
     
     def validate_input(self, settings: Settings) -> List[FinalInputProtocol]:
@@ -242,41 +238,42 @@ class InputValidator:
             The list with final validated tokens.
         """
 
-        if self.debug: print(f"InputValidator.validate_input(input_tokens='{self.input_tokens}')")
+        self._settings.logger.debug(f"InputValidator.validate_input(input_tokens='{self._input_tokens}')")
 
-        self.settings = settings
-        self.result = []
-        self.i = 0
-        while self.i < len(self.input_tokens):
-            if self.debug: print(f"New iteration: {self.i}.")
+        self._settings = settings
+        self._result = []
+        self._i = 0
+        
+        while self._i < len(self._input_tokens):
+            self._settings.logger.debug(f"New iteration: {self._i}.")
 
-            prev_i: int = self.i - 1 if self.i >= 1 else 0
-            next_i: int = self.i + 1 if self.i < len(self.input_tokens) - 1 else len(self.input_tokens) - 1
-            if self.debug: print(
-                f"[{prev_i}: {self.input_tokens[prev_i]}"\
-                f" | {self.i}: {self.input_tokens[self.i]}"\
-                f" | {next_i}: {self.input_tokens[next_i]}]"
+            prev_i: int = self._i - 1 if self._i >= 1 else 0
+            next_i: int = self._i + 1 if self._i < len(self._input_tokens) - 1 else len(self._input_tokens) - 1
+            self._settings.logger.debug(
+                f"[{prev_i}: {self._input_tokens[prev_i]}"\
+                f" | {self._i}: {self._input_tokens[self._i]}"\
+                f" | {next_i}: {self._input_tokens[next_i]}]"
             )
 
-            token: RawInputToken = self.input_tokens[self.i]
+            token: RawInputToken = self._input_tokens[self._i]
 
             if token.type == RawTokenType.WORD:
-                if self.debug: print("Process `Word` token.")
+                self._settings.logger.debug("Process `Word` token.")
                 self.validate_token_word()
 
             elif token.type == RawTokenType.MINUS:
-                if self.debug: print("Process `Minus` token.")
+                self._settings.logger.debug("Process `Minus` token.")
                 self.validate_token_minus()
             
             elif token.type == RawTokenType.SPACE:
-                if self.debug: print("Process `Space` token.")
+                self._settings.logger.debug("Process `Space` token.")
             
             elif token.type == RawTokenType.STRING:
-                if self.debug: print("Process `String` token.")
-                self.result.append(self.cast_token(FinalInputTokenWord(token.value)))
+                self._settings.logger.debug("Process `String` token.")
+                self._result.append(self.cast_token(FinalInputTokenWord(token.value)))
             
             else:
-                if self.debug: print(f"Process unknown token: {token}.")
+                self._settings.logger.debug(f"Process unknown token: {token}.")
                 warning(
                     settings,
                     Strings.UNKNOWN_TOKEN,
@@ -285,9 +282,9 @@ class InputValidator:
                     InputStructureError
                 )
             
-            self.i += 1
+            self._i += 1
 
-        return self.result
+        return self._result
 
 class ParsedInputValidator:
     """Validator class for parsed input dict."""
