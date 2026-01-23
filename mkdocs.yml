@@ -1,0 +1,30 @@
+site_name: mplib
+site_url: https://github.com/BesBobowyy/mplib
+nav:
+  - Welcome Page: index.md
+  - Start Guide:
+    - 01. First script: start-guide/01-first-project.md
+    - 02. Warnings level: start-guide/02-warnings-level.md
+    - 03. State Control: start-guide/03-state-control.md
+    - 04. Command Logic: start-guide/04-command-logic.md
+    - 05. Logging: start-guide/05-logging.md
+markdown_extensions:
+  - admonition
+  - pymdownx.superfences
+  - pymdownx.highlight
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.tabbed
+  - pymdownx.emoji
+  - pymdownx.arithmatex
+  - pymdownx.details
+  - pymdownx.mark
+  - pymdownx.caret
+  - pymdownx.tilde
+  - pymdownx.critic
+  - pymdownx.keys
+  - pymdownx.progressbar
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.blocks.admonition
+theme: readthedocs
