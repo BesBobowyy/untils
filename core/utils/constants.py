@@ -230,3 +230,15 @@ class Strings:
     Placeholders:
         $input_str - Input string.
     """
+
+    LOG_SETTINGS_INIT = "`mplib` was initialized with settings."
+    """The library was started with settings."""
+
+    LOG_CONFIG_NOT_LOADED = "Config is not loaded."
+    """Config is not loaded."""
+
+    LOG_CALCULATE_NORMALIZED_PATH_START = "Calculating a normalized path."
+    """Calculating a normalized path."""
+    
+    LOG_CALCULATE_NORMALIZED_PATH_END = "Calculated the normalized path."
+    """Calculated the normalized path."""
