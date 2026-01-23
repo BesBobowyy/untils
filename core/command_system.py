@@ -1,5 +1,3 @@
-# TODO: Enhance docs.
-
 from core.utils.type_aliases import InputDict, CommandPath, CallableCommand
 from core.utils.constants import Strings
 
@@ -20,13 +18,14 @@ class CommandSystem:
     config: Optional[CommandsConfig]
     route: Dict[CommandPath, CallableCommand]
 
-    def __init__(self, settings: Optional[Settings]=None, config: Optional[CommandsConfig]=None) -> None:
+    def __init__(self, settings: Settings, config: Optional[CommandsConfig]=None) -> None:
         """
         Args:
             settings: A `Settings` object as context.
             config: A `Config` object as configuration.
         """
-        self.settings = settings or Settings()
+
+        self.settings = settings
         self.config = config
         self.route = {}
     
@@ -35,7 +34,7 @@ class CommandSystem:
 
         return self.config is not None
     
-    def load_config(self, config_path: str, debug: bool=False) -> None:
+    def load_config(self, config_path: str) -> None:
         """Loads a commands config.
         
         Args:
@@ -43,7 +42,7 @@ class CommandSystem:
             debug: Determines debug messages display.
         """
 
-        self.config = Processor.load_config(self.settings, config_path, debug)
+        self.config = Processor.load_config(self.settings, config_path)
     
     def set_config(self, config: Optional[CommandsConfig]) -> None:
         """Sets already cached config or deletes exist.
@@ -54,7 +53,7 @@ class CommandSystem:
 
         self.config = config
     
-    def process_input(self, input_str: str, debug: bool=False) -> InputDict:
+    def process_input(self, input_str: str) -> InputDict:
         """Processes a user input and returns `InputDict` as input representation.
         
         Args:
@@ -65,7 +64,7 @@ class CommandSystem:
             An input representation.
         """
 
-        return Processor.process_input(self.settings, input_str, debug)
+        return Processor.process_input(self.settings, input_str)
     
     def is_input_valid(self, input_dict: InputDict) -> bool:
         """Validates an input.
@@ -79,6 +78,9 @@ class CommandSystem:
 
         if self.config is not None:
             return ParsedInputValidator.validate_input_dict(self.settings, input_dict, self.config)
+        
+        self.settings.logger.warning(Strings.LOG_CONFIG_NOT_LOADED)
+
         return False
     
     def get_normalized_path(self, input_dict: InputDict) -> List[str]:
@@ -92,11 +94,14 @@ class CommandSystem:
         """
 
         if self.config is None:
+            self.settings.logger.warning(Strings.LOG_CONFIG_NOT_LOADED)
             return []
 
         input_path: List[str] = input_dict["path"]
         commands: List[CommandNode] = self.config.commands
         result: List[str] = []
+
+        self.settings.logger.info(Strings.LOG_CALCULATE_NORMALIZED_PATH_START)
 
         for part in input_path:
             for command in commands:
@@ -112,12 +117,16 @@ class CommandSystem:
                     commands = command.children
                     break
         
+        self.settings.logger.info(Strings.LOG_CALCULATE_NORMALIZED_PATH_END)
+        
         return result
     
     def get_all_commands(self) -> List[CommandNode]:
         """Returns all commands as command nodes."""
 
-        if self.config is None: return []
+        if self.config is None:
+            self.settings.logger.warning(Strings.LOG_CONFIG_NOT_LOADED)
+            return []
 
         result: List[CommandNode] = []
 
@@ -130,7 +139,9 @@ class CommandSystem:
     def get_all_commands_str(self) -> List[str]:
         """Returns all commands as name strings."""
 
-        if self.config is None: return []
+        if self.config is None:
+            self.settings.logger.warning(Strings.LOG_CONFIG_NOT_LOADED)
+            return []
 
         result: List[str] = []
 
@@ -143,7 +154,9 @@ class CommandSystem:
     def get_available_commands(self) -> List[CommandNode]:
         """Returns all available commands in current state as command nodes."""
 
-        if self.config is None: return []
+        if self.config is None:
+            self.settings.logger.warning(Strings.LOG_CONFIG_NOT_LOADED)
+            return []
 
         result: List[CommandNode] = []
 
@@ -158,7 +171,9 @@ class CommandSystem:
     def get_available_commands_str(self) -> List[str]:
         """Returns all available commands in current state as name strings."""
 
-        if self.config is None: return []
+        if self.config is None:
+            self.settings.logger.warning(Strings.LOG_CONFIG_NOT_LOADED)
+            return []
 
         result: List[str] = []
 
@@ -275,7 +290,7 @@ class CommandSystem:
         del self.route[path]
         return True
     
-    def execute(self, input_str: str, input_dict: InputDict, normalized_path: List[str], debug: bool=True) -> bool:
+    def execute(self, input_str: str, input_dict: InputDict, normalized_path: List[str]) -> bool:
         """Executes an input string with the command routing.
         
         Args:
@@ -289,7 +304,7 @@ class CommandSystem:
         """
 
         if len(normalized_path) == 0:
-            if debug: print(Strings.COMMAND_NOT_WRITTEN)
+            self.settings.logger.info(Strings.COMMAND_NOT_WRITTEN)
             return False
         
         for path, func in self.route.items():
@@ -297,5 +312,5 @@ class CommandSystem:
                 func(input_str, input_dict)
                 return True
         
-        if debug: print(Strings.COMMAND_NOT_IMPLEMENTED.substitute(input_str=input_str))
+        self.settings.logger.warning(Strings.COMMAND_NOT_IMPLEMENTED.substitute(input_str=input_str))
         return False
