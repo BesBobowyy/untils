@@ -283,6 +283,16 @@ class ConfigValidator:
             ConfigValuesError: The name is empty, has '-' character in name start, has special characters, has invalid `InternalState` structure (if `is_state == True`), has invalid `Fallback` structure (if `is_fallback == True`) or character is not valid.
         """
 
+        if not isinstance(name, str):
+            warning(
+                settings,
+                Strings.COMMAND_INVALID_ALIASES,
+                Strings.AUTO_CORRECT_WITH_CASTING,
+                ConfigValuesWarning,
+                ConfigValuesError
+            )
+            name = str(name)
+
         if name == ''.join([" "] * len(name)):
             warning(
                 settings,
@@ -314,22 +324,27 @@ class ConfigValidator:
                 removing_indexes.append(i)
             elif name[i] in specials:
                 # Character is special.
-                if is_state and name[i] == "_":
-                    # Internal state name validation.
-                    start: int = i
-                    while i < len(name) and name[i] == "_":
+                if is_state:
+                    if name[i] == "_":
+                        # Internal state name validation.
+                        start: int = i
+                        while i < len(name) and name[i] == "_":
+                            i += 1
+                        if i - start == 2:
+                            continue
+                        warning(
+                            settings,
+                            Strings.STATE_INTERNAL_NAME_INVALID.substitute(length=(i - start)),
+                            Strings.AUTO_CORRECT_TO_DEFAULTS,
+                            ConfigValuesWarning,
+                            ConfigValuesError
+                        )
+                        name = name[:start] + "__" + name[i:]
+                        i = start + 2
+                    elif name[i] in ("-", ":", "/"):
+                        # Allowed special characters in state name.
                         i += 1
-                    if i - start == 2:
                         continue
-                    warning(
-                        settings,
-                        Strings.STATE_INTERNAL_NAME_INVALID.substitute(length=(i - start)),
-                        Strings.AUTO_CORRECT_TO_DEFAULTS,
-                        ConfigValuesWarning,
-                        ConfigValuesError
-                    )
-                    name = name[:start] + "__" + name[i:]
-                    i = start + 2
                 
                 if is_fallback and name[i] == "$":
                     # `Fallback` type standart.
