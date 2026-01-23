@@ -17,10 +17,12 @@ def warning(
 ) -> None:
     """Warning or exception in validators."""
     if settings.warnings_level in (warning_levels or (WarningsLevel.Basic,)):
+        settings.logger.warning(message + ' ' + auto_correct, stacklevel=3)
         warnings.warn(
             message + ' ' + auto_correct,
             warning,
             stacklevel=3
         )
     elif settings.warnings_level in (exception_levels or (WarningsLevel.Strict,)):
+        settings.logger.error(message, stacklevel=3)
         raise exception(message)
