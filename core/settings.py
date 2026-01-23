@@ -4,13 +4,16 @@ from core.utils.constants import Strings
 
 from typing import Union
 
+import logging
+
 class Settings:
     """The global context settings."""
 
-    __slots__ = ["__warnings_level", "__current_state"]
+    __slots__ = ["__warnings_level", "__current_state", "__logger"]
 
     __warnings_level: WarningsLevel
     __current_state: str
+    __logger: logging.Logger
 
     @property
     def warnings_level(self) -> WarningsLevel:
@@ -32,10 +35,17 @@ class Settings:
             self.__current_state = value
         elif type(value) == InternalState:
             self.__current_state = value.value
+    
+    @property
+    def logger(self) -> logging.Logger:
+        """Returns settings logger."""
+        return self.__logger
 
     def __init__(self) -> None:
         self.__warnings_level = WarningsLevel.Strict
-        self.current_state = InternalState.INIT.value
+        self.__current_state = InternalState.INIT.value
+        self.__logger = logging.getLogger(__name__)
+        self.__logger.debug(Strings.LOG_SETTINGS_INIT)
 
     @alternative(version=Strings.ANY_VERSION)
     def get_warnings_level(self) -> WarningsLevel:
