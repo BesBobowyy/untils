@@ -1,4 +1,6 @@
 __pycache__/
+.dev_utils/
 NOTE_*
 Thumbs.db
 code_tests/
+*.log
