@@ -1,4 +1,4 @@
-from core.utils.constants import Strings
+from src.utils.constants import Strings
 
 from functools import wraps
 

@@ -37,3 +37,17 @@ pip install mplib
 [Start Course](start-guide/01-first-project.md "Beginner course into the library.")
 
 API Reference
+
+## Roadmap
+
+I have resolve my thoughs to several categories:
+
+1. **Main**:
+    - [ ] Add command description in `"description"` field.
+    - [ ] Add reserved commands in format like internal state name: `"__help__"` - Get all and available commands.
+
+2. **Additional**:
+    - [ ] ...
+
+3. **Conceptions**:
+    - [ ] Typing system in config through `"type"` field.

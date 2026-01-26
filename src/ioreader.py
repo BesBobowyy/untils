@@ -1,8 +1,8 @@
-from core.utils.type_aliases import UnknownConfigType, ConfigSupportedExtensions
-from core.iovalidator import IOValidator
-from core.utils.protocols import IOReaderMixin, IOReaderProtocol
+from src.utils.type_aliases import UnknownConfigType, ConfigSupportedExtensions
+from src.iovalidator import IOValidator
+from src.utils.protocols import IOReaderMixin, IOReaderProtocol
 
-from core.settings import Settings
+from src.settings import Settings
 
 from typing import Dict, override
 

@@ -1,4 +1,4 @@
-from core.utils.type_aliases import CommandType
+from src.utils.type_aliases import CommandType
 
 from typing import List, Any
 

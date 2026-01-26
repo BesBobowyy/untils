@@ -1,16 +1,16 @@
 # pyright: reportUnnecessaryIsInstance=false
 # ^^^^^^^ (Raw dynamic data checking.)
 
-from core.utils.type_aliases import (
+from src.utils.type_aliases import (
     ConfigType, UnknownConfigType, ConfigVersion, UnknownCommandClass, CommandClass, CommandType, CommandConfig_Unknown,
     CommandStates, InternalCommandStates
 )
-from core.utils.enums import ConfigVersions, WarningsLevel
-from core.utils.lib_warnings import ConfigStructureWarning, ConfigValuesWarning, ConfigStructureError, ConfigValuesError
-from core.utils.constants import Constants, Strings
-from core.utils.functions import warning
+from src.utils.enums import ConfigVersions, WarningsLevel
+from src.utils.lib_warnings import ConfigStructureWarning, ConfigValuesWarning, ConfigStructureError, ConfigValuesError
+from src.utils.constants import Constants, Strings
+from src.utils.functions import warning
 
-from core.settings import Settings
+from src.settings import Settings
 
 from typing import Dict, get_args, Optional, List, Any
 

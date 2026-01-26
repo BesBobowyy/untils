@@ -1,6 +1,6 @@
-from core.utils.type_aliases import ConfigVersion
+from src.utils.type_aliases import ConfigVersion
 
-from core.command import StateNode, CommandNode
+from src.command import StateNode, CommandNode
 
 from typing import List
 

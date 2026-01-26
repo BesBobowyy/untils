@@ -1,7 +1,7 @@
-from core.utils.type_aliases import UnknownConfigType
-from core.utils.enums import FinalTokenType
+from src.utils.type_aliases import UnknownConfigType
+from src.utils.enums import FinalTokenType
 
-from core.settings import Settings
+from src.settings import Settings
 
 from typing import Protocol, Any, runtime_checkable
 from abc import ABC, abstractmethod

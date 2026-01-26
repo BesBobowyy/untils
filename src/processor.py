@@ -1,14 +1,14 @@
-from core.utils.type_aliases import UnknownConfigType, ConfigType, InputDict
-from core.utils.protocols import FinalInputProtocol
+from src.utils.type_aliases import UnknownConfigType, ConfigType, InputDict
+from src.utils.protocols import FinalInputProtocol
 
-from core.ioreader import IOReader
-from core.config_validator import ConfigValidator
-from core.parser import Parser
-from core.commands_config import CommandsConfig
-from core.settings import Settings
-from core.input_token import RawInputToken
-from core.tokenizer import Tokenizer
-from core.input_validator import InputValidator
+from src.ioreader import IOReader
+from src.config_validator import ConfigValidator
+from src.parser import Parser
+from src.commands_config import CommandsConfig
+from src.settings import Settings
+from src.input_token import RawInputToken
+from src.tokenizer import Tokenizer
+from src.input_validator import InputValidator
 
 from typing import List, Optional
 

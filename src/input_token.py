@@ -1,4 +1,4 @@
-from core.utils.enums import RawTokenType, FinalTokenType
+from src.utils.enums import RawTokenType, FinalTokenType
 
 from typing import Any, Literal
 

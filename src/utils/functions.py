@@ -1,6 +1,6 @@
-from core.utils.enums import WarningsLevel
+from src.utils.enums import WarningsLevel
 
-from core.settings import Settings
+from src.settings import Settings
 
 from typing import Type, Optional, Tuple, Union
 

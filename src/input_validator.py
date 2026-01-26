@@ -1,17 +1,17 @@
-from core.utils.type_aliases import InputDict
-from core.utils.enums import RawTokenType, FinalTokenType, InternalState
-from core.utils.constants import Strings
-from core.utils.protocols import FinalInputProtocol
+from src.utils.type_aliases import InputDict
+from src.utils.enums import RawTokenType, FinalTokenType, InternalState
+from src.utils.constants import Strings
+from src.utils.protocols import FinalInputProtocol
 
-from core.input_token import (
+from src.input_token import (
     RawInputToken, FinalInputTokenWord, FinalInputTokenFlag,
     FinalInputTokenOption
 )
-from core.settings import Settings
-from core.utils.functions import warning
-from core.utils.lib_warnings import InputStructureWarning, InputValuesWarning, InputStructureError, InputValuesError
-from core.commands_config import CommandsConfig
-from core.command import CommandNode, CommandWordNode, CommandFallbackNode, CommandFlagNode, CommandOptionNode
+from src.settings import Settings
+from src.utils.functions import warning
+from src.utils.lib_warnings import InputStructureWarning, InputValuesWarning, InputStructureError, InputValuesError
+from src.commands_config import CommandsConfig
+from src.command import CommandNode, CommandWordNode, CommandFallbackNode, CommandFlagNode, CommandOptionNode
 
 from typing import List, Literal, cast, Union, Dict, Optional
 

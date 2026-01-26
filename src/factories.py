@@ -1,6 +1,6 @@
-from core.utils.type_aliases import CommandType
+from src.utils.type_aliases import CommandType
 
-from core.command import (
+from src.command import (
     CommandNode, CommandWordNode, CommandFallbackNode, CommandFlagNode, CommandOptionNode, AliasNode
 )
 

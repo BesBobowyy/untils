@@ -1,12 +1,12 @@
-from core.utils.type_aliases import CommandClass, CommandType, ConfigType, InternalCommandStates, InputDict
-from core.utils.protocols import FinalInputProtocol
-from core.utils.enums import FinalTokenType
+from src.utils.type_aliases import CommandClass, CommandType, ConfigType, InternalCommandStates, InputDict
+from src.utils.protocols import FinalInputProtocol
+from src.utils.enums import FinalTokenType
 
-from core.command import CommandNode, AliasNode, StateNode
-from core.factories import CommandNodeFactory
-from core.commands_config import CommandsConfig
-from core.input_token import FinalInputTokenWord, FinalInputTokenFlag, FinalInputTokenOption
-from core.settings import Settings
+from src.command import CommandNode, AliasNode, StateNode
+from src.factories import CommandNodeFactory
+from src.commands_config import CommandsConfig
+from src.input_token import FinalInputTokenWord, FinalInputTokenFlag, FinalInputTokenOption
+from src.settings import Settings
 
 from typing import Dict, List, Any, cast, get_args, Optional
 

@@ -1,11 +1,11 @@
-from core.utils.type_aliases import InputDict, CommandPath, CallableCommand, CommandHistory
-from core.utils.constants import Strings
+from src.utils.type_aliases import InputDict, CommandPath, CallableCommand, CommandHistory
+from src.utils.constants import Strings
 
-from core.commands_config import CommandsConfig
-from core.settings import Settings
-from core.processor import Processor
-from core.input_validator import ParsedInputValidator
-from core.command import CommandNode, CommandWordNode, CommandFallbackNode
+from src.commands_config import CommandsConfig
+from src.settings import Settings
+from src.processor import Processor
+from src.input_validator import ParsedInputValidator
+from src.command import CommandNode, CommandWordNode, CommandFallbackNode
 
 from typing import Optional, List, Union, cast, Dict, Tuple
 
