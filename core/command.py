@@ -46,13 +46,13 @@ class CommandWordNode(CommandNode):
 class CommandFallbackNode(CommandNode):
     """Command node for fallback type."""
 
-    default: Any
+    default: str
     """A default value."""
     children: List[CommandNode]
     """Next commands below this."""
 
     def __str__(self) -> str:
-        return f"CommandFallbackNode[{self.name}](default={repr(self.default)}){self.children}"
+        return f"CommandFallbackNode[{self.name}](default='{self.default}'){self.children}"
 
 @dataclass(frozen=True)
 class CommandFlagNode(CommandNode):

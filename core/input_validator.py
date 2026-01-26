@@ -13,15 +13,17 @@ from core.utils.lib_warnings import InputStructureWarning, InputValuesWarning, I
 from core.commands_config import CommandsConfig
 from core.command import CommandNode, CommandWordNode, CommandFallbackNode, CommandFlagNode, CommandOptionNode
 
-from typing import List, Literal, cast, Union, Dict
+from typing import List, Literal, cast, Union, Dict, Optional
 
 class InputValidator:
     """Validator class for tokenized input."""
 
-    __slots__ = ["_settings", "_input_tokens", "_result", "_i"]
+    __slots__ = ["_settings", "_config", "_input_tokens", "_result", "_i"]
 
     _settings: Settings
     """The settings."""
+    _config: Optional[CommandsConfig]
+    """The commands config."""
     _input_tokens: List[RawInputToken]
     """The raw input tokens."""
     _result: List[FinalInputProtocol]
@@ -29,17 +31,20 @@ class InputValidator:
     _i: int
     """The validation index."""
 
-    def __init__(self, settings: Settings, input_tokens: List[RawInputToken]) -> None:
+    def __init__(self, settings: Settings, config: Optional[CommandsConfig], input_tokens: List[RawInputToken]) -> None:
         """
         Args:
             input_tokens: The raw input tokens.
+            config: The validated and parsed commands config.
             debug: Determines debug messages display.
         """
         
         self._settings = settings
+        self._config = config
         self._input_tokens = input_tokens
         self._result = []
         self._i = 0
+
     def warning_out_of_bounce(self) -> None:
         """Warnings out of bounce.
         
@@ -228,6 +233,52 @@ class InputValidator:
             self._settings.logger.debug("Expected `Option` construction.")
             self.validate_token_option()
     
+    def validate_fallback_defaults(self) -> None:
+        result: List[FinalInputProtocol] = []
+        commands: List[CommandNode] = self._config.commands if self._config is not None else []
+
+        found: bool = False
+        for part in self._result:
+            # Copying.
+            found = False
+            for node in commands:
+                if node.type == "word":
+                    node = cast(CommandWordNode, node)
+
+                    if not (node.name == part.value or part.value in [alias.alias_name for alias in node.aliases]):
+                        continue
+                elif node.type == "fallback":
+                    node = cast(CommandFallbackNode, node)
+                else:
+                    continue
+                
+                result.append(part)
+                commands = node.children
+                found = True
+                break
+
+            if not found:
+                # Invalid path.
+                return
+        
+        while commands != []:
+            # Searching `Fallback`s.
+            found = False
+
+            for node in commands:
+                if node.type == "fallback":
+                    node = cast(CommandFallbackNode, node)
+                    result.append(self.cast_token(FinalInputTokenWord(str(node.default))))
+                    commands = node.children
+                    found = True
+                    break
+                    
+            if not found:
+                # Invalid path.
+                return
+        
+        self._result = result
+    
     def validate_input(self, settings: Settings) -> List[FinalInputProtocol]:
         """Validates a user input.
         
@@ -283,6 +334,8 @@ class InputValidator:
                 )
             
             self._i += 1
+
+        self.validate_fallback_defaults()
 
         return self._result
 
@@ -391,6 +444,7 @@ class ParsedInputValidator:
                             validate_command(command.children, i + 1)
                         
                         return True
+            
             warning(
                 settings,
                 Strings.INPUT_PATH_INVALID.substitute(name=input_dict["path"][i]),
@@ -398,6 +452,7 @@ class ParsedInputValidator:
                 InputValuesWarning,
                 InputValuesError
             )
+
             return False
         
         if len(input_dict["path"]) == 0:
