@@ -360,6 +360,7 @@ i: int = 10    # Iterations count.
 # Commands functions
 def com_message(input_str: str, input_dict: mplib.utils.InputDict) -> None:
     print(":", input_dict["path"][1])
+    print(":", input_dict["path"][1])
     
 def com_python(input_str: str, input_dict: mplib.utils.InputDict) -> None:
     print("mplib was created on Python!")
@@ -380,6 +381,7 @@ while i > 0:
         is_valid: bool = command_system.is_input_valid(input_dict)    # Is input valid.
         normalized_path: List[str] = command_system.get_normalized_path(input_dict)    # Get normalized path.
         command_system.execute(input_str, input_dict, normalized_path)    # Execute commands.
+        print(input_dict)
         print(input_dict)
     except mplib.utils.InputError as e:
         # Unless input is valid.
