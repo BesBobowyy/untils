@@ -64,7 +64,7 @@ class CommandSystem:
             An input representation.
         """
 
-        return Processor.process_input(self.settings, input_str)
+        return Processor.process_input(self.settings, self.config, input_str)
     
     def is_input_valid(self, input_dict: InputDict) -> bool:
         """Validates an input.

@@ -10,7 +10,7 @@ from core.input_token import RawInputToken
 from core.tokenizer import Tokenizer
 from core.input_validator import InputValidator
 
-from typing import List
+from typing import List, Optional
 
 class Processor:
     """Processor class for config processing."""
@@ -48,7 +48,7 @@ class Processor:
         return CONFIG
     
     @staticmethod
-    def process_input(settings: Settings, input_str: str) -> InputDict:
+    def process_input(settings: Settings, config: Optional[CommandsConfig], input_str: str) -> InputDict:
         """Validates a user input.
         
         Args:
@@ -70,7 +70,7 @@ class Processor:
 
         ### 2. InputValidator ###
         settings.logger.debug("Validating the input.")
-        input_validator: InputValidator = InputValidator(settings, TOKENS)
+        input_validator: InputValidator = InputValidator(settings, config, TOKENS)
         VALIDATED_TOKENS: List[FinalInputProtocol] = input_validator.validate_input(settings)
         settings.logger.debug(f"Validated tokens: {VALIDATED_TOKENS}.")
 

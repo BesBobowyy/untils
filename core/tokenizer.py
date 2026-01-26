@@ -6,7 +6,7 @@ from core.settings import Settings
 from typing import List, Literal, cast
 
 class Tokenizer:
-    """Tokenizer class, which tokenize a user input."""
+    """Tokenizer class, which tokenizes user input."""
 
     __slots__ = ["_settings", "_input_str", "_result", "_i"]
 
@@ -36,15 +36,21 @@ class Tokenizer:
 
         string_char: Literal['\'', '\"'] = cast(Literal['\'', '\"'], self._input_str[self._i])
         self._i += 1
-        start: int = self._i
+        string: str = ""
 
         while self._i < len(self._input_str) and self._input_str[self._i] != string_char:
-            if self._input_str[self._i] == '\\' and self._input_str[self._i + 1] == string_char:
-                self._i += 2
-            else:
+            if self._input_str[self._i] == '\\':
+                if self._input_str[self._i + 1] in ('\'', '\"'):
+                    string += self._input_str[self._i + 1]
+                elif self._input_str[self._i + 1] == '\\':
+                    string += self._input_str[self._i]
+                
                 self._i += 1
+            else:
+                string += self._input_str[self._i]
+
+            self._i += 1
         
-        string: str = self._input_str[start:self._i]
         self._result.append(RawInputToken(RawTokenType.STRING, string))
         self._settings.logger.debug(f"String: '{string}'")
     
