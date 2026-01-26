@@ -54,3 +54,11 @@ class InputDict(TypedDict):
     path: List[str]
     flags: Dict[str, Optional[bool]]
     options: Dict[str, Any]
+
+class CommandHistory(TypedDict):
+    max_size: int
+    """Max notes count. By default is `100`."""
+    is_write_overflow: bool
+    """Is delete the oldest notes from history and save the newest on max size limit. If disabled, new notes won't catched in history. By default is `True`."""
+    notes: List[Tuple[str, InputDict]]
+    """Catched inputs with tracking."""

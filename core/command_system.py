@@ -1,4 +1,4 @@
-from core.utils.type_aliases import InputDict, CommandPath, CallableCommand
+from core.utils.type_aliases import InputDict, CommandPath, CallableCommand, CommandHistory
 from core.utils.constants import Strings
 
 from core.commands_config import CommandsConfig
@@ -7,27 +7,39 @@ from core.processor import Processor
 from core.input_validator import ParsedInputValidator
 from core.command import CommandNode, CommandWordNode, CommandFallbackNode
 
-from typing import Optional, List, Union, cast, Dict
+from typing import Optional, List, Union, cast, Dict, Tuple
 
 class CommandSystem:
     """Core class with command config, API, processing and much more."""
 
-    __slots__ = ["settings", "config", "route"]
+    __slots__ = ["settings", "config", "route", "history"]
 
     settings: Settings
     config: Optional[CommandsConfig]
     route: Dict[CommandPath, CallableCommand]
+    history: CommandHistory
 
-    def __init__(self, settings: Settings, config: Optional[CommandsConfig]=None) -> None:
+    def __init__(
+        self,
+        settings: Settings,
+        config: Optional[CommandsConfig]=None,
+        history: Optional[CommandHistory]=None
+    ) -> None:
         """
         Args:
             settings: A `Settings` object as context.
             config: A `Config` object as configuration.
+            history: A command history object.
         """
 
         self.settings = settings
         self.config = config
         self.route = {}
+        self.history = {
+            "max_size": 100,
+            "is_write_overflow": True,
+            "notes": []
+        } if history is None else history
     
     def is_config_loaded(self) -> bool:
         """Returns a `bool` value, what determines is config loaded."""
@@ -39,7 +51,6 @@ class CommandSystem:
         
         Args:
             config_path: Real path of config file on current machine.
-            debug: Determines debug messages display.
         """
 
         self.config = Processor.load_config(self.settings, config_path)
@@ -58,7 +69,6 @@ class CommandSystem:
         
         Args:
             input_str: Input raw string.
-            debug: Determines debug messages display.
         
         Returns:
             An input representation.
@@ -290,18 +300,77 @@ class CommandSystem:
         del self.route[path]
         return True
     
-    def execute(self, input_str: str, input_dict: InputDict, normalized_path: List[str]) -> bool:
+    def get_history(self) -> List[Tuple[str, InputDict]]:
+        """Returns all notes from command history.
+        
+        Returns:
+            List from tuples with input string and parsed input dict.
+        """
+
+        return self.history["notes"]
+    
+    def get_history_input(self) -> List[str]:
+        """Returns all input strings from command history.
+        
+        Returns:
+            List with input string.
+        """
+
+        return [note[0] for note in self.history["notes"]]
+    
+    def get_history_dict(self) -> List[InputDict]:
+        """Returns all parsed input dicts from command history.
+        
+        Returns:
+            List with parsed input dict.
+        """
+
+        return [note[1] for note in self.history["notes"]]
+    
+    def write_history(self, input_str: str, input_dict: InputDict) -> bool:
+        """Writes a new note to command history.
+        
+        Args:
+            input_str: Original input string.
+            input_dict: Parsed input dict.
+
+        Returns:
+            `False` if max note count limit reached and overwrite disabled, else `True`.
+        """
+
+        if len(self.history["notes"]) >= self.history["max_size"] and not self.history["is_write_overflow"]:
+            return False
+        
+        self.history["notes"].append((input_str, input_dict))
+        return True
+    
+    def read_history(self, index: int) -> Tuple[str, InputDict]:
+        """Returns a note by index in saved indexes.
+        
+        Args:
+            index: Positive note index by latest. Will clamped to limits.
+
+        Returns:
+            A note from history.
+        """
+
+        return self.history["notes"][max(min(0, index), self.history["max_size"] - 1)]
+    
+    def execute(self, input_str: str, input_dict: InputDict, normalized_path: List[str], tracking: bool=True) -> bool:
         """Executes an input string with the command routing.
         
         Args:
             input_str: An input string.
             input_dict: A cached input for validation.
             normalized_path: A command path, which determines all posible correct ways in path.
-            debug: Determines debug messages display. If debug enabled and normalized path is empty, displays the message `Strings.COMMAND_NOT_WRITTEN` If debug enabled and input string is not accessed to any in the routing, displays the message `Strings.COMMAND_NOT_IMPLEMENTED`.
+            tracking: Is save current command in history.
         
         Returns:
             `False` if a command is not written or not in the command routing. `True` if a command was called.
         """
+
+        if tracking:
+            self.write_history(input_str, input_dict)
 
         if len(normalized_path) == 0:
             self.settings.logger.info(Strings.COMMAND_NOT_WRITTEN)
