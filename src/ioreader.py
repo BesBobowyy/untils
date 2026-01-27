@@ -1,13 +1,17 @@
-from src.utils.type_aliases import UnknownConfigType, ConfigSupportedExtensions
-from src.iovalidator import IOValidator
-from src.utils.protocols import IOReaderMixin, IOReaderProtocol
+"""ioreader.py - IO operations through `IOReader` and their mixins for config extensions."""
 
-from src.settings import Settings
+# pylint: disable=too-few-public-methods
 
 from typing import Dict, override
 
 import json
 import os
+
+from src.utils.type_aliases import UnknownConfigType, ConfigSupportedExtensions
+from src.iovalidator import IOValidator
+from src.utils.protocols import IOReaderMixin, IOReaderProtocol
+
+from src.settings import Settings
 
 class JSONMixin(IOReaderMixin):
     """The JSON extension for `IOReader`."""
@@ -47,5 +51,5 @@ class IOReader():
 
         if extension in IOReader._MIXINS:
             content: UnknownConfigType = IOReader._MIXINS[extension].read(settings, file_path)
-        
+
         return content
