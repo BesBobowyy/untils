@@ -1,10 +1,12 @@
-from src.utils.type_aliases import ConfigVersion
-
-from src.command import StateNode, CommandNode
+"""commands_config.py - Commands config."""
 
 from typing import List
 
 from dataclasses import dataclass
+
+from src.utils.type_aliases import ConfigVersion
+
+from src.command import StateNode, CommandNode
 
 @dataclass(frozen=True)
 class CommandsConfig:
@@ -16,6 +18,6 @@ class CommandsConfig:
     """All written states. Use states for context separation."""
     commands: List[CommandNode]
     """All available commands for user."""
-    
+
     def __str__(self) -> str:
         return f"CommandsConfig(version={self.version}, states={self.states}, commands={self.commands})"
