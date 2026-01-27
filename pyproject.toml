@@ -5,6 +5,10 @@ authors = [{name = "BesBobowyy"}]
 description = "Light-weight library for console games or small utils to process user input as commands and describe structure with config."
 readme = "README.md"
 license = {text = "MIT"}
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+]
 requires-python = ">=3.8"
 
 [project.optional-dependencies]
