@@ -1,10 +1,14 @@
+"""factories.py - All factories."""
+
+# pylint: disable=too-few-public-methods
+
+from typing import List, Any
+
 from src.utils.type_aliases import CommandType
 
 from src.command import (
     CommandNode, CommandWordNode, CommandFallbackNode, CommandFlagNode, CommandOptionNode, AliasNode
 )
-
-from typing import List, Any
 
 class CommandNodeFactory:
     """Factory class for command nodes."""
@@ -28,11 +32,9 @@ class CommandNodeFactory:
             children: The nest commands.
         """
 
-        if node_type == "word":
-            return CommandWordNode(name, node_type, aliases, children)
-        elif node_type == "fallback":
-            return CommandFallbackNode(name, node_type, default, children)
-        elif node_type == "flag":
-            return CommandFlagNode(name, node_type, aliases, default)
-        elif node_type == "option":
-            return CommandOptionNode(name, node_type, aliases, default)
+        return {
+            "word": CommandWordNode(name, node_type, aliases, children),
+            "fallback": CommandFallbackNode(name, node_type, default, children),
+            "flag": CommandFlagNode(name, node_type, aliases, default),
+            "option": CommandOptionNode(name, node_type, aliases, default)
+        }[node_type]
