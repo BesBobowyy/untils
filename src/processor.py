@@ -1,3 +1,7 @@
+"""processor.py - `Processor` class for universal pipe-lines."""
+
+from typing import List, Optional
+
 from src.utils.type_aliases import UnknownConfigType, ConfigType, InputDict
 from src.utils.protocols import FinalInputProtocol
 
@@ -9,8 +13,6 @@ from src.settings import Settings
 from src.input_token import RawInputToken
 from src.tokenizer import Tokenizer
 from src.input_validator import InputValidator
-
-from typing import List, Optional
 
 class Processor:
     """Processor class for config processing."""
@@ -32,23 +34,27 @@ class Processor:
 
         ### 1. IOReader ###
         settings.logger.debug("Reading the file.")
-        CONTENT: UnknownConfigType = IOReader.read_file(settings, file_path)
-        settings.logger.debug(f"Content: {CONTENT}.")
+        content: UnknownConfigType = IOReader.read_file(settings, file_path)
+        settings.logger.debug(f"Content: {content}.")
 
         ### 2. ConfigValidator ###
         settings.logger.debug("Validating the config.")
-        RAW_CONFIG: ConfigType = ConfigValidator.validate_config(settings, CONTENT)
-        settings.logger.debug(f"Intermediate config: {RAW_CONFIG}.")
+        raw_config: ConfigType = ConfigValidator.validate_config(settings, content)
+        settings.logger.debug(f"Intermediate config: {raw_config}.")
 
         ### 3. Parser ###
         settings.logger.debug("Parsing.")
-        CONFIG: CommandsConfig = Parser.parse_config(RAW_CONFIG)
-        settings.logger.debug(f"Parsed config: {CONFIG}.")
+        config: CommandsConfig = Parser.parse_config(raw_config)
+        settings.logger.debug(f"Parsed config: {config}.")
 
-        return CONFIG
-    
+        return config
+
     @staticmethod
-    def process_input(settings: Settings, config: Optional[CommandsConfig], input_str: str) -> InputDict:
+    def process_input(
+        settings: Settings,
+        config: Optional[CommandsConfig],
+        input_str: str
+    ) -> InputDict:
         """Validates a user input.
         
         Args:
@@ -65,18 +71,18 @@ class Processor:
         ### 1. Tokenizer ###
         settings.logger.debug("Tokenizing the input.")
         tokenizer: Tokenizer = Tokenizer(settings, input_str)
-        TOKENS: List[RawInputToken] = tokenizer.tokenize_input()
-        settings.logger.debug(f"Tokens: {TOKENS}.")
+        tokens: List[RawInputToken] = tokenizer.tokenize_input()
+        settings.logger.debug(f"Tokens: {tokens}.")
 
         ### 2. InputValidator ###
         settings.logger.debug("Validating the input.")
-        input_validator: InputValidator = InputValidator(settings, config, TOKENS)
-        VALIDATED_TOKENS: List[FinalInputProtocol] = input_validator.validate_input(settings)
-        settings.logger.debug(f"Validated tokens: {VALIDATED_TOKENS}.")
+        input_validator: InputValidator = InputValidator(settings, config, tokens)
+        validated_tokens: List[FinalInputProtocol] = input_validator.validate_input(settings)
+        settings.logger.debug(f"Validated tokens: {validated_tokens}.")
 
         ### 3. Parser ###
         settings.logger.debug("Parsing the input.")
-        PARSED_REPRESENTATION: InputDict = Parser.parse_input(settings, VALIDATED_TOKENS)
-        settings.logger.debug(f"Parsed input: {PARSED_REPRESENTATION}.")
+        parsed_representation: InputDict = Parser.parse_input(settings, validated_tokens)
+        settings.logger.debug(f"Parsed input: {parsed_representation}.")
 
-        return PARSED_REPRESENTATION
+        return parsed_representation
