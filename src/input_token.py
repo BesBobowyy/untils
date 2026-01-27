@@ -1,8 +1,12 @@
-from src.utils.enums import RawTokenType, FinalTokenType
+"""input_token.py - Raw and Final input tokens for `Tokenizer` and `InputValidator`."""
+
+# pylint: disable=too-few-public-methods
 
 from typing import Any, Literal
 
 from dataclasses import dataclass
+
+from src.utils.enums import RawTokenType, FinalTokenType
 
 @dataclass(frozen=True)
 class RawInputToken:
@@ -29,7 +33,7 @@ class FinalInputTokenWord:
     def __init__(self, value: str) -> None:
         self.type = FinalTokenType.WORD
         self.value = value
-    
+
     def __repr__(self) -> str:
         return f"FinalInputTokenWord(value={self.value})"
 
@@ -47,7 +51,7 @@ class FinalInputTokenFlag:
         self.type = FinalTokenType.FLAG
         self.name = name
         self.value = value
-    
+
     def __repr__(self) -> str:
         return f"FinalInputTokenFlag(name={self.name}, value={self.value})"
 
