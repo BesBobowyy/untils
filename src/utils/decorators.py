@@ -1,19 +1,22 @@
-from src.utils.constants import Strings
+"""decorators.py - All decorators for functions and methods to define them status."""
+
+import warnings
 
 from functools import wraps
 
 from typing import Callable, Any, TypeVar
-FuncType = TypeVar("FuncType", bound=Callable[..., Any])
 
-import warnings
+from src.utils.constants import Strings
+
+T = TypeVar("T", bound=Callable[..., Any])
 
 def deprecated(
     version: str = Strings.UNKNOWN_VERSION,
     reason: str = Strings.DEPRECATED_METHOD
-) -> Callable[[FuncType], FuncType]:
+) -> Callable[[T], T]:
     """Deprecated method decorator."""
 
-    def decorator(func: FuncType) -> FuncType:
+    def decorator(func: T) -> T:
         @wraps(func)
         def wrapper(*args: Any, **kwargs: Any) -> Any:
             warnings.warn(
@@ -28,10 +31,10 @@ def deprecated(
 def alternative(
     version: str = Strings.UNKNOWN_VERSION,
     reason: str = Strings.ALTERNATIVE_METHOD
-) -> Callable[[FuncType], FuncType]:
+) -> Callable[[T], T]:
     """Alternative method decorator."""
 
-    def decorator(func: FuncType) -> FuncType:
+    def decorator(func: T) -> T:
         @wraps(func)
         def wrapper(*args: Any, **kwargs: Any) -> Any:
             warnings.warn(
