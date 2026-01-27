@@ -1,25 +1,27 @@
+"""enums.py - Enums."""
+
 from enum import IntEnum, Enum
 
 class LibraryVersionStatus(IntEnum):
     """The library version status: \"Development\", \"Alpha\", \"Beta\" or \"Release\"."""
 
-    d = 0
+    D = 0
     """Development."""
-    a = 1
+    A = 1
     """Alpha."""
-    b = 2
+    B = 2
     """Beta."""
-    r = 3
+    R = 3
     """Release."""
 
 class WarningsLevel(IntEnum):
     """Error alerts level."""
 
-    Ignore = 0
+    IGNORE = 0
     """Silent errors."""
-    Basic = 1
+    BASIC = 1
     """Display with auto-correcting."""
-    Strict = 2
+    STRICT = 2
     """Raise exceptions."""
 
 class ConfigVersions(IntEnum):
