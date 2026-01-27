@@ -1,8 +1,10 @@
-from src.utils.type_aliases import CommandType
+"""command.py - Command nodes."""
 
 from typing import List, Any
 
 from dataclasses import dataclass
+
+from src.utils.type_aliases import CommandType
 
 @dataclass(frozen=True)
 class AliasNode():
@@ -62,7 +64,7 @@ class CommandFlagNode(CommandNode):
     """Command aliases."""
     default: Any
     """A default value."""
-    
+
     def __str__(self) -> str:
         return f"CommandFlagNode[{self.name} : {self.aliases}](default={repr(self.default)})"
 
