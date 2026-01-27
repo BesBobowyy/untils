@@ -1,22 +1,27 @@
-from src.utils.enums import LibraryVersionStatus, ConfigVersions
+"""constants.py - All constants and strings."""
+
+# pylint: disable=line-too-long
+# pylint: disable=too-few-public-methods
 
 from typing import Tuple, Literal
 
 from string import Template
+
+from src.utils.enums import LibraryVersionStatus, ConfigVersions
 
 class Constants:
     """The library constants."""
 
     SUPPORTED_CONFIG_FORMATS: Tuple[Literal[".json", ".json5"], ...] = (".json", ".json5")
     """All config formats, which supported in current version of the library."""
-    
+
     STANDART_CONFIG_FORMATS: Tuple[Literal['.json']] = (".json",)
     """All standart config format, which must be used in final product."""
 
     LATEST_CONFIG_VERSION = ConfigVersions.V1
     """Current config version."""
 
-    VERSION: Tuple[Literal[1], Literal[0], Literal[0], Literal[LibraryVersionStatus.d]] = (1, 0, 0, LibraryVersionStatus.d)
+    VERSION: Tuple[Literal[1], Literal[0], Literal[0], Literal[LibraryVersionStatus.D]] = (1, 0, 0, LibraryVersionStatus.D)
     """Current library version."""
 
 class Strings:
@@ -239,6 +244,6 @@ class Strings:
 
     LOG_CALCULATE_NORMALIZED_PATH_START = "Calculating a normalized path."
     """Calculating a normalized path."""
-    
+
     LOG_CALCULATE_NORMALIZED_PATH_END = "Calculated the normalized path."
     """Calculated the normalized path."""
