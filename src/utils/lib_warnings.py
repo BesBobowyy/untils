@@ -1,3 +1,5 @@
+"""lib_warnings.py - All warnings and exceptions."""
+
 class ConfigWarning(Warning):
     """Warning class for all config validation issues."""
 
