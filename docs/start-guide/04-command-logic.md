@@ -52,12 +52,12 @@ You can write your logic to any place, but the best way - Is OOP.
 Code example:
 
 ```py
-# Written by mplib v1.0.0r.
+# Written by untils v1.0.0r.
 
 # In this code I don't use any detailed architecture for simplification.
 # In real products you must use OOP style or another simplier.
 
-import mplib
+import untils
 
 from typing import List, Union, Literal
 
@@ -68,8 +68,8 @@ DIR: str = os.path.abspath(os.path.dirname(__file__))    # The 'Project' path.
 CONFIG_PATH: str = os.path.join(DIR, "resources", "config.json")    # Hardcoded path.
 
 # The library configuration.
-settings: mplib.Settings = mplib.Settings()    # Context settings object.
-command_system: mplib.CommandSystem = mplib.CommandSystem(settings)    # Command system.
+settings: untils.Settings = untils.Settings()    # Context settings object.
+command_system: untils.CommandSystem = untils.CommandSystem(settings)    # Command system.
 command_system.load_config(CONFIG_PATH)    # Load the config.
 
 # Others.
@@ -92,7 +92,7 @@ class CommandProcessor:
     def __init__(self, game_logic: GameLogic) -> None:
         self.game_logic = game_logic
 
-    def com_base(self, input_str: str, input_dict: mplib.utils.InputDict) -> None:
+    def com_base(self, input_str: str, input_dict: untils.utils.InputDict) -> None:
         """Path: `[\"base\"]`.
 
         State: `__init__`.
@@ -102,7 +102,7 @@ class CommandProcessor:
 
         print("This is base command in this example.")
 
-    def com_player(self, input_str: str, input_dict: mplib.utils.InputDict) -> None:
+    def com_player(self, input_str: str, input_dict: untils.utils.InputDict) -> None:
         """Path: `[\"player\"]`.
         
         State: `__init__`.
@@ -114,7 +114,7 @@ class CommandProcessor:
         settings.current_state = "context:player"    # Changing to the `context:player`.
         print("You in player settings mode. Type `help` for info.")
 
-    def com_quit(self, input_str: str, input_dict: mplib.utils.InputDict) -> None:
+    def com_quit(self, input_str: str, input_dict: untils.utils.InputDict) -> None:
         """Path: `[\"quit\"]`.
         
         State: `context:player`.
@@ -126,7 +126,7 @@ class CommandProcessor:
         settings.current_state = "__init__"    # Changing to the `__init__`.
         print("Returning to main game...")
 
-    def com_help(self, input_str: str, input_dict: mplib.utils.InputDict) -> None:
+    def com_help(self, input_str: str, input_dict: untils.utils.InputDict) -> None:
         """Path: `[\"help\"]`.
         
         State: `context:player`.
@@ -141,7 +141,7 @@ class CommandProcessor:
         print("| `abilities` - View player abilities (placebo option).")
         print("| `advancements` - View advancements (placebo option).")
 
-    def com_name(self, input_str: str, input_dict: mplib.utils.InputDict) -> None:
+    def com_name(self, input_str: str, input_dict: untils.utils.InputDict) -> None:
         """Path: `[\"name\"]`.
         
         State: `context:player`.
@@ -162,7 +162,7 @@ class CommandProcessor:
             # Invalid command structure.
             print(f"Invalid command structure: {input_str}.")
 
-    def com_abilities(self, input_str: str, input_dict: mplib.utils.InputDict) -> None:
+    def com_abilities(self, input_str: str, input_dict: untils.utils.InputDict) -> None:
         """Path: `[\"abilities\"]`.
         
         State: `context:player`.
@@ -172,7 +172,7 @@ class CommandProcessor:
 
         print("This is placebo option without implementation for example.")
 
-    def com_advancements(self, input_str: str, input_dict: mplib.utils.InputDict) -> None:
+    def com_advancements(self, input_str: str, input_dict: untils.utils.InputDict) -> None:
         """Path: `[\"advancements\"]`.
         
         State: `context:player`.
@@ -203,12 +203,12 @@ while game_logic.i > 0:
 
     try:
         # If input is valid.
-        input_dict: mplib.utils.InputDict = command_system.process_input(input_str)    # Parsed input.
+        input_dict: untils.utils.InputDict = command_system.process_input(input_str)    # Parsed input.
         is_valid: bool = command_system.is_input_valid(input_dict)    # Is input valid.
         normalized_path: List[str] = command_system.get_normalized_path(input_dict)    # Get normalized path.
         command_system.execute(input_str, input_dict, normalized_path)    # Execute commands.
         print(input_dict["path"])
-    except mplib.utils.InputError as e:
+    except untils.utils.InputError as e:
         # Unless input is valid.
         print(f"Incorrect input: {e}")
     except Exception as e:

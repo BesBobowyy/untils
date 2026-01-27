@@ -14,7 +14,7 @@ In this project we will use next folder structure:
 ```
 
 !!! tip "Tip"
-    You can contain your config everywhere, but control names and context, that don't mistake with mplib config and others in future.
+    You can contain your config everywhere, but control names and context, that don't mistake with `untils` config and others in future.
 
 ## Config
 
@@ -30,7 +30,7 @@ Configs contain three required fields: `version`, `states` and `commands`:
 
 A config version define, which config structure and abilities are available. Config version always an integer.
 
-Сurrent version of mplib has only 1 version: 1, in the future version may be changed.
+Сurrent version of `untils` has only 1 version: 1, in the future version may be changed.
 
 !!! warning "Warning"
     The documentation will change with version changing and may be deprecated in future.
@@ -334,12 +334,12 @@ Let's define first config file for this course in `"Project/resources/config.jso
 This is a first script, which you can run with this library:
 
 ```py
-# Written by mplib v1.0.0r.
+# Written by untils v1.0.0r.
 
 # In this code I don't use any detailed architecture for simplification.
 # In real products you must use OOP style or another simplier.
 
-import mplib
+import untils
 
 from typing import List
 
@@ -350,20 +350,20 @@ DIR: str = os.path.abspath(os.path.dirname(__file__))    # The 'Project' path.
 CONFIG_PATH: str = os.path.join(DIR, "resources", "config.json")    # Hardcoded path.
 
 # The library configuration.
-settings: mplib.Settings = mplib.Settings()    # Context settings object.
-command_system: mplib.CommandSystem = mplib.CommandSystem(settings)    # Command system.
+settings: untils.Settings = untils.Settings()    # Context settings object.
+command_system: untils.CommandSystem = untils.CommandSystem(settings)    # Command system.
 command_system.load_config(CONFIG_PATH)    # Load the config.
 
 # Others.
 i: int = 10    # Iterations count.
 
 # Commands functions
-def com_message(input_str: str, input_dict: mplib.utils.InputDict) -> None:
+def com_message(input_str: str, input_dict: untils.utils.InputDict) -> None:
     print(":", input_dict["path"][1])
     print(":", input_dict["path"][1])
     
-def com_python(input_str: str, input_dict: mplib.utils.InputDict) -> None:
-    print("mplib was created on Python!")
+def com_python(input_str: str, input_dict: untils.utils.InputDict) -> None:
+    print("untils was created on Python!")
 
 # Command adding.
 command_system.register_command(("message",), com_message)    # Register `com_message`.
@@ -377,13 +377,13 @@ while i > 0:
 
     try:
         # If input is valid.
-        input_dict: mplib.utils.InputDict = command_system.process_input(input_str)    # Parsed input.
+        input_dict: untils.utils.InputDict = command_system.process_input(input_str)    # Parsed input.
         is_valid: bool = command_system.is_input_valid(input_dict)    # Is input valid.
         normalized_path: List[str] = command_system.get_normalized_path(input_dict)    # Get normalized path.
         command_system.execute(input_str, input_dict, normalized_path)    # Execute commands.
         print(input_dict)
         print(input_dict)
-    except mplib.utils.InputError as e:
+    except untils.utils.InputError as e:
         # Unless input is valid.
         print(f"Incorrect input: {e}")
     except Exception as e:
@@ -409,8 +409,8 @@ This snippet defines a path to the config in `"Project/resources/config.json"`.
 
 ```py
 # The library configuration.
-settings: mplib.Settings = mplib.Settings()    # Context settings object.
-command_system: mplib.CommandSystem = mplib.CommandSystem(settings)    # Command system.
+settings: untils.Settings = untils.Settings()    # Context settings object.
+command_system: untils.CommandSystem = untils.CommandSystem(settings)    # Command system.
 command_system.load_config(CONFIG_PATH)    # Load the config.
 ```
 
@@ -423,11 +423,11 @@ By steps:
 
 ```py
 # Commands functions
-def com_message(input_str: str, input_dict: mplib.utils.InputDict) -> None:
+def com_message(input_str: str, input_dict: untils.utils.InputDict) -> None:
     print(input_dict["path"][1] if len(input_dict["path"]) == 2 else None)
     
-def com_python(input_str: str, input_dict: mplib.utils.InputDict) -> None:
-    print("mplib was created on Python!")
+def com_python(input_str: str, input_dict: untils.utils.InputDict) -> None:
+    print("untils was created on Python!")
 ```
 
 In this snippet we create two functions with `CommandCallable` signatrure.
@@ -436,7 +436,7 @@ In this snippet we create two functions with `CommandCallable` signatrure.
     The `CommandCallable` type alias defines all command with next signature:
 
     ```py
-    def name(input_str: str, input_dict: mplib.utils.InputDict) -> None:
+    def name(input_str: str, input_dict: untils.utils.InputDict) -> None:
         ...
     ```
 
@@ -457,11 +457,11 @@ while i > 0:
 
     try:
         # If input is valid.
-        input_dict: mplib.utils.InputDict = command_system.process_input(input_str)    # Parsed input.
+        input_dict: untils.utils.InputDict = command_system.process_input(input_str)    # Parsed input.
         is_valid: bool = command_system.is_input_valid(input_dict)    # Is input valid.
         normalized_path: List[str] = command_system.get_normalized_path(input_dict)    # Get normalized path.
         command_system.execute(input_str, input_dict, normalized_path)    # Execute commands.
-    except mplib.utils.InputError as e:
+    except untils.utils.InputError as e:
         # Unless input is valid.
         print(f"Incorrect input: {e}")
     except Exception as e:
@@ -479,7 +479,7 @@ Well done!
 
 ## Conclusion
 
-TL;DR: Config as file defines command structure, but for all command you need to write own behaviour via mplib's API.
+TL;DR: Config as file defines command structure, but for all command you need to write own behaviour via untils's API.
 
 ## Documentation
 

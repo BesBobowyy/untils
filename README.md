@@ -1,10 +1,12 @@
-# Welcome to the `mplib`
+# Welcome to `untils`
+
+untils
 
 ![Version](https://img.shields.io/badge/version-1.0.0-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Python](https://img.shields.io/badge/python-3.12+_(maybe_3.6+)-yellow)
 
-*mplib* - Is light-weight library for console games or small utils to process user input as commands and describe structure with config.
+*untils* - Is light-weight library for console games or small utils to process user input as commands and describe structure with config.
 
 ## Abilities
 
@@ -26,7 +28,7 @@ This library was builded with next architecture:
 ## Installation
 
 ```bash
-pip install mplib
+pip install untils
 ```
 
 > [!Warning]

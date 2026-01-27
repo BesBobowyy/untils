@@ -59,12 +59,12 @@ We will define, that the command `c1` toggles the state `adventure`, the command
 Let's write script:
 
 ```py
-# Written by mplib v1.0.0r.
+# Written by untils v1.0.0r.
 
 # In this code I don't use any detailed architecture for simplification.
 # In real products you must use OOP style or another simplier.
 
-import mplib
+import untils
 
 from typing import List
 
@@ -75,31 +75,31 @@ DIR: str = os.path.abspath(os.path.dirname(__file__))    # The 'Project' path.
 CONFIG_PATH: str = os.path.join(DIR, "resources", "config.json")    # Hardcoded path.
 
 # The library configuration.
-settings: mplib.Settings = mplib.Settings()    # Context settings object.
-command_system: mplib.CommandSystem = mplib.CommandSystem(settings)    # Command system.
+settings: untils.Settings = untils.Settings()    # Context settings object.
+command_system: untils.CommandSystem = untils.CommandSystem(settings)    # Command system.
 command_system.load_config(CONFIG_PATH)    # Load the config.
 
 # Others.
 i: int = 10    # Iterations count.
 
 # Commands functions
-def com_b(input_str: str, input_dict: mplib.utils.InputDict) -> None:
+def com_b(input_str: str, input_dict: untils.utils.InputDict) -> None:
     print("Command `b`.")
 
-def com_c1(input_str: str, input_dict: mplib.utils.InputDict) -> None:
+def com_c1(input_str: str, input_dict: untils.utils.InputDict) -> None:
     print("Command `c1`.")
     print("Routing to the state `adventure`.")
     settings.current_state = "adventure"    # Changing to the `adventure`.
 
-def com_c2(input_str: str, input_dict: mplib.utils.InputDict) -> None:
+def com_c2(input_str: str, input_dict: untils.utils.InputDict) -> None:
     print("Command `c2`.")
 
-def com_c3(input_str: str, input_dict: mplib.utils.InputDict) -> None:
+def com_c3(input_str: str, input_dict: untils.utils.InputDict) -> None:
     print("Command `c3`.")
     print("Routing to the state `fight`.")
     settings.current_state = "fight"    # Changing to the `fight`.
 
-def com_c4(input_str: str, input_dict: mplib.utils.InputDict) -> None:
+def com_c4(input_str: str, input_dict: untils.utils.InputDict) -> None:
     print("Command `c4`.")
     print("Routing to the state `adventure`.")
     settings.current_state = "adventure"    # Changing to the `adventure`.
@@ -119,12 +119,12 @@ while i > 0:
 
     try:
         # If input is valid.
-        input_dict: mplib.utils.InputDict = command_system.process_input(input_str)    # Parsed input.
+        input_dict: untils.utils.InputDict = command_system.process_input(input_str)    # Parsed input.
         is_valid: bool = command_system.is_input_valid(input_dict)    # Is input valid.
         normalized_path: List[str] = command_system.get_normalized_path(input_dict)    # Get normalized path.
         command_system.execute(input_str, input_dict, normalized_path)    # Execute commands.
         print(input_dict["path"])
-    except mplib.utils.InputError as e:
+    except untils.utils.InputError as e:
         # Unless input is valid.
         print(f"Incorrect input: {e}")
     except Exception as e:
@@ -261,12 +261,12 @@ Let's define a new config:
 Let's create script for this hard config:
 
 ```py
-# Written by mplib v1.0.0r.
+# Written by untils v1.0.0r.
 
 # In this code I don't use any detailed architecture for simplification.
 # In real products you must use OOP style or another simplier.
 
-import mplib
+import untils
 
 from typing import List
 
@@ -277,8 +277,8 @@ DIR: str = os.path.abspath(os.path.dirname(__file__))    # The 'Project' path.
 CONFIG_PATH: str = os.path.join(DIR, "resources", "config.json")    # Hardcoded path.
 
 # The library configuration.
-settings: mplib.Settings = mplib.Settings()    # Context settings object.
-command_system: mplib.CommandSystem = mplib.CommandSystem(settings)    # Command system.
+settings: untils.Settings = untils.Settings()    # Context settings object.
+command_system: untils.CommandSystem = untils.CommandSystem(settings)    # Command system.
 command_system.load_config(CONFIG_PATH)    # Load the config.
 
 # Others.
@@ -286,23 +286,23 @@ i: int = 15    # Iterations count.
 player_name: str = "Player"    # Player name.
 
 # Commands functions
-def com_base(input_str: str, input_dict: mplib.utils.InputDict) -> None:
+def com_base(input_str: str, input_dict: untils.utils.InputDict) -> None:
     print("Command `base`.")
     print("This is base command in this example.")
 
-def com_player(input_str: str, input_dict: mplib.utils.InputDict) -> None:
+def com_player(input_str: str, input_dict: untils.utils.InputDict) -> None:
     print("Command `player`.")
     print("Routing to the state `context:player`.")
     settings.current_state = "context:player"    # Changing to the `context:player`.
     print("You in player settings mode. Type `help` for info.")
 
-def com_quit(input_str: str, input_dict: mplib.utils.InputDict) -> None:
+def com_quit(input_str: str, input_dict: untils.utils.InputDict) -> None:
     print("Command `player:quit`.")
     print("Routing to the state `__init__`.")
     settings.current_state = "__init__"    # Changing to the `__init__`.
     print("Returning to main game...")
 
-def com_help(input_str: str, input_dict: mplib.utils.InputDict) -> None:
+def com_help(input_str: str, input_dict: untils.utils.InputDict) -> None:
     print("Command `player:help`.")
     print("You in player mode, you can use:")
     print("| `quit` - Return.")
@@ -311,7 +311,7 @@ def com_help(input_str: str, input_dict: mplib.utils.InputDict) -> None:
     print("| `abilities` - View player abilities (placebo option).")
     print("| `advancements` - View advancements (placebo option).")
 
-def com_name(input_str: str, input_dict: mplib.utils.InputDict) -> None:
+def com_name(input_str: str, input_dict: untils.utils.InputDict) -> None:
     global player_name
     
     print("Command `player:name`.")
@@ -327,11 +327,11 @@ def com_name(input_str: str, input_dict: mplib.utils.InputDict) -> None:
         # Invalid command structure.
         print(f"Invalid command structure: {input_str}.")
 
-def com_abilities(input_str: str, input_dict: mplib.utils.InputDict) -> None:
+def com_abilities(input_str: str, input_dict: untils.utils.InputDict) -> None:
     print("Command `player:abilities`.")
     print("This is placebo option without implementation for example.")
 
-def com_advancements(input_str: str, input_dict: mplib.utils.InputDict) -> None:
+def com_advancements(input_str: str, input_dict: untils.utils.InputDict) -> None:
     print("Command `player:advancements`.")
     print("This is placebo option without implementation for example.")
 
@@ -354,12 +354,12 @@ while i > 0:
 
     try:
         # If input is valid.
-        input_dict: mplib.utils.InputDict = command_system.process_input(input_str)    # Parsed input.
+        input_dict: untils.utils.InputDict = command_system.process_input(input_str)    # Parsed input.
         is_valid: bool = command_system.is_input_valid(input_dict)    # Is input valid.
         normalized_path: List[str] = command_system.get_normalized_path(input_dict)    # Get normalized path.
         command_system.execute(input_str, input_dict, normalized_path)    # Execute commands.
         print(input_dict["path"])
-    except mplib.utils.InputError as e:
+    except untils.utils.InputError as e:
         # Unless input is valid.
         print(f"Incorrect input: {e}")
     except Exception as e:

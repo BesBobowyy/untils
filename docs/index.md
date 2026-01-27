@@ -1,6 +1,6 @@
-# Welcome to mplib
+# Welcome to untils
 
-Welcome to mplib! This light-weight library was made for console games and small utils, which can parse a raw config to commands, which can be accessed by user input and API. It supports a dependency-module config commands system, almost-perfect validation, states system, 4 command types.
+Welcome to untils! This light-weight library was made for console games and small utils, which can parse a raw config to commands, which can be accessed by user input and API. It supports a dependency-module config commands system, almost-perfect validation, states system, 4 command types.
 
 With this library you has:
 
@@ -24,7 +24,7 @@ This library was builded with next architecture:
 You can install the library from PyPi:
 
 ```bash
-pip install mplib
+pip install untils
 ```
 
 !!! warning "Warning"
@@ -33,11 +33,11 @@ pip install mplib
 Test template:
 
 ```py
-# Written by mplib v1.0.0r.
+# Written by untils v1.0.0r.
 
-import mplib
+import untils
 
-print("Version: ", mplib.utils.Constants.VERSION, ", Latest config version: ", mplib.utils.Constants.LATEST_CONFIG_VERSION, sep='')
+print("Version: ", untils.utils.Constants.VERSION, ", Latest config version: ", untils.utils.Constants.LATEST_CONFIG_VERSION, sep='')
 ```
 
 ## Conclusion

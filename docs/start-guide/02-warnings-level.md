@@ -15,7 +15,7 @@ Warnings level has three levels:
 But don't accept Warnings level as your enemy. Conversaly, it always help you, because for all type of errors it has different error messages. Also you can use Warnings level in code, because it raises exceptions, which you can catch and process. Also you can fix a much errors with this thing, just read a message.
 
 !!! tip "Tip"
-    Read docstrings, because mplib has docstrings in Google Style for ALL public objects, including classes, methods, functions, decorators and much more.
+    Read docstrings, because `untils` has docstrings in Google Style for ALL public objects, including classes, methods, functions, decorators and much more.
 
 ## What does it hadles?
 
@@ -77,28 +77,28 @@ You can change Warnings level in Settings object by property.
 Warnings level - Is a Enum with three fields.
 
 ```py
-import mplib
+import untils
 
-settings: mplib.Settings = mplib.Settings()
-settings.warnings_level = mplib.utils.WarningsLevel.Ignore    # Ignore mode.
+settings: untils.Settings = untils.Settings()
+settings.warnings_level = untils.utils.WarningsLevel.Ignore    # Ignore mode.
 print(settings.warnings_level)    # > WarningsLevel.Ignore
-settings.warnings_level = mplib.utils.WarningsLevel.Basic    # Basic mode.
+settings.warnings_level = untils.utils.WarningsLevel.Basic    # Basic mode.
 print(settings.warnings_level)    # > WarningsLevel.Basic
-settings.warnings_level = mplib.utils.WarningsLevel.Strict    # Strict mode.
+settings.warnings_level = untils.utils.WarningsLevel.Strict    # Strict mode.
 print(settings.warnings_level)    # > WarningsLevel.Strict
 ```
 
 You can also use an alternative method, which always show you `FutureWarning`, but is not denied:
 
 ```py
-import mplib
+import untils
 
-settings: mplib.Settings = mplib.Settings()
-settings.set_warnings_level(mplib.utils.WarningsLevel.Ignore)    # Ignore mode.
+settings: untils.Settings = untils.Settings()
+settings.set_warnings_level(untils.utils.WarningsLevel.Ignore)    # Ignore mode.
 print(settings.get_warnings_level())    # > WarningsLevel.Ignore
-settings.set_warnings_level(mplib.utils.WarningsLevel.Basic)    # Basic mode.
+settings.set_warnings_level(untils.utils.WarningsLevel.Basic)    # Basic mode.
 print(settings.get_warnings_level())    # > WarningsLevel.Basic
-settings.set_warnings_level(mplib.utils.WarningsLevel.Strict)    # Strict mode.
+settings.set_warnings_level(untils.utils.WarningsLevel.Strict)    # Strict mode.
 print(settings.get_warnings_level())    # > WarningsLevel.Strict
 ```
 
