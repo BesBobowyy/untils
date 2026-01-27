@@ -1,4 +1,10 @@
-from src.utils.type_aliases import CommandClass, CommandType, ConfigType, InternalCommandStates, InputDict
+"""parser.py - Parses config and input."""
+
+from typing import Dict, List, Any, cast, get_args, Optional
+
+from src.utils.type_aliases import (
+    CommandClass, CommandType, ConfigType, InternalCommandStates, InputDict
+)
 from src.utils.protocols import FinalInputProtocol
 from src.utils.enums import FinalTokenType
 
@@ -7,8 +13,6 @@ from src.factories import CommandNodeFactory
 from src.commands_config import CommandsConfig
 from src.input_token import FinalInputTokenWord, FinalInputTokenFlag, FinalInputTokenOption
 from src.settings import Settings
-
-from typing import Dict, List, Any, cast, get_args, Optional
 
 class Parser:
     """This class parses raw data to intermediate reference."""
@@ -42,20 +46,20 @@ class Parser:
 
             if command_type in ("word", "flag", "option"):
                 aliases = [AliasNode(name, alias) for alias in command_dict.get("aliases", [])]
-            
+
             if command_type in ("flag", "option"):
                 default: Any = command_dict.get("default", None)
-            
+
             if command_type in ("word", "fallback"):
                 children: List[CommandNode] = []
-            
+
                 for child_name, child_dict in command_dict.get("children", {}).items():
                     children.append(parse_command(child_name, cast(CommandClass, child_dict)))
-            
+
             return CommandNodeFactory.create(name, command_type, aliases, default, children)
 
         return [parse_command(name, command_dict) for name, command_dict in commands.items()]
-    
+
     @staticmethod
     def parse_states(states_dict: Dict[str, List[str]]) -> List[StateNode]:
         """Parses states in config.
@@ -71,7 +75,7 @@ class Parser:
             StateNode(state, state in get_args(InternalCommandStates), aliases)
             for state, aliases in states_dict.items()
         ]
-    
+
     @staticmethod
     def parse_config(config_dict: ConfigType) -> CommandsConfig:
         """Parses a validated config.
@@ -88,7 +92,7 @@ class Parser:
             Parser.parse_states(config_dict["states"]),
             Parser.parse_commands(config_dict["commands"])
         )
-    
+
     @staticmethod
     def parse_input(settings: Settings, tokens: List[FinalInputProtocol]) -> InputDict:
         """Parses a user input to input dictionary.
@@ -116,17 +120,17 @@ class Parser:
             if token.type == FinalTokenType.WORD and isinstance(token, FinalInputTokenWord):
                 settings.logger.debug("Process `Word` token.")
                 path.append(token.value)
-            
+
             elif token.type == FinalTokenType.FLAG and isinstance(token, FinalInputTokenFlag):
                 settings.logger.debug("Process `Flag` token.")
                 flags[token.name] = token.value
-            
+
             elif token.type == FinalTokenType.OPTION and isinstance(token, FinalInputTokenOption):
                 settings.logger.debug("Process `Option` token.")
                 options[token.name] = token.value
-            
+
             i += 1
-        
+
         return {
             "path": path,
             "flags": flags,
