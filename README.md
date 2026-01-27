@@ -2,7 +2,7 @@
 
 ![Version](https://img.shields.io/badge/version-1.0.0-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
-![Python](https://img.shields.io/badge/python-3.12+_(maybe_3.6+)-yellow)
+![Python](https://img.shields.io/badge/python-3.12+_(maybe_3.8+)-yellow)
 
 *untils* - Is light-weight library for console games or small utils to process user input as commands and describe structure with config.
 
