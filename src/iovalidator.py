@@ -1,11 +1,15 @@
+"""iovalidator.py - `IOValidator` for IO validations."""
+
+# pylint: disable=too-few-public-methods
+
+import os
+
 from src.utils.enums import WarningsLevel
 from src.utils.constants import Constants, Strings
 from src.utils.lib_warnings import FileWarning, FileError
 from src.utils.functions import warning
 
 from src.settings import Settings
-
-import os
 
 class IOValidator:
     """Validator class for the all IO operations for `IOReader`."""
@@ -38,7 +42,7 @@ class IOValidator:
                         Strings.CONFIG_EXTENSION_NOT_SUPPORTS,
                         Strings.AUTO_CORRECT_WITH_ACCEPTING,
                         FileWarning,
-                        warning_levels=(WarningsLevel.Basic, WarningsLevel.Strict),
+                        warning_levels=(WarningsLevel.BASIC, WarningsLevel.STRICT),
                         exception_levels=()
                     )
                 return True
@@ -50,5 +54,5 @@ class IOValidator:
                 FileWarning,
                 FileError
             )
-        
+
         return False
