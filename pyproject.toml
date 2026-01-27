@@ -1,0 +1,15 @@
+[project]
+name = "untils"
+version = "1.0.0"
+authors = [{name = "BesBobowyy"}]
+description = "Light-weight library for console games or small utils to process user input as commands and describe structure with config."
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.8"
+
+[project.optional-dependencies]
+docs = ["mkdocs", "mkdocs-material"]
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
