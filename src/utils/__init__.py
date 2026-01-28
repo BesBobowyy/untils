@@ -19,5 +19,4 @@ from src.utils.decorators import deprecated, alternative
 from src.utils.enums import (
     WarningsLevel, ConfigVersions, RawTokenType, FinalTokenType, InternalState
 )
-from src.utils.functions import warning
 from src.utils.protocols import IOReaderMixin, Factoric, FinalInputProtocol

@@ -7,7 +7,6 @@ import os
 from src.utils.enums import WarningsLevel
 from src.utils.constants import Constants, Strings
 from src.utils.lib_warnings import FileWarning, FileError
-from src.utils.functions import warning
 
 from src.settings import Settings
 
@@ -37,8 +36,7 @@ class IOValidator:
             if extension in Constants.SUPPORTED_CONFIG_FORMATS:
                 if extension not in Constants.STANDART_CONFIG_FORMATS:
                     # The config format is not in standart.
-                    warning(
-                        settings,
+                    settings.warning(
                         Strings.CONFIG_EXTENSION_NOT_SUPPORTS,
                         Strings.AUTO_CORRECT_WITH_ACCEPTING,
                         FileWarning,
@@ -47,8 +45,7 @@ class IOValidator:
                     )
                 return True
         else:
-            warning(
-                settings,
+            settings.warning(
                 Strings.CONFIG_FILE_NOT_EXISTS,
                 Strings.AUTO_CORRECT_WITH_SKIPPING,
                 FileWarning,

@@ -2,13 +2,15 @@
 
 # pyright: reportUnnecessaryIsInstance=false
 
-from typing import Union
+from typing import Optional, Tuple, Type, Union
 
+import warnings
 import logging
 
 from src.utils.enums import WarningsLevel, InternalState
 from src.utils.decorators import alternative
 from src.utils.constants import Strings
+from src.utils.lib_warnings import ConfigError, ConfigWarning
 
 class Settings:
     """The global context settings."""
@@ -36,9 +38,25 @@ class Settings:
     @current_state.setter
     def current_state(self, value: Union[str, InternalState]) -> None:
         if isinstance(value, str):
-            self.__current_state = value
+            if value != InternalState.INIT.value:
+                self.warning(
+                    Strings.INVALID_INTERNAL_STATE_CHANGE.substitute(state=value),
+                    Strings.AUTO_CORRECT_TO_LATEST,
+                    RuntimeWarning,
+                    ValueError
+                )
+            else:
+                self.__current_state = value
         elif isinstance(value, InternalState):
-            self.__current_state = value.value
+            if value != InternalState.INIT:
+                self.warning(
+                    Strings.INVALID_INTERNAL_STATE_CHANGE.substitute(state=value),
+                    Strings.AUTO_CORRECT_TO_LATEST,
+                    RuntimeWarning,
+                    ValueError
+                )
+            else:
+                self.__current_state = value.value
 
     @property
     def logger(self) -> logging.Logger:
@@ -72,3 +90,25 @@ class Settings:
         """
 
         self.__warnings_level = warnings_level
+
+    def warning(
+        self,
+        message: str,
+        auto_correct: str,
+        warning_type: Type[Warning]=ConfigWarning,
+        exception_type: Type[Exception]=ConfigError,
+        warning_levels: Optional[Union[Tuple[WarningsLevel, ...], Tuple[None]]]=None,
+        exception_levels: Optional[Union[Tuple[WarningsLevel, ...], Tuple[None]]]=None
+    ) -> None:
+        """Warning or exception in validators."""
+
+        if self.warnings_level in (warning_levels or (WarningsLevel.BASIC,)):
+            self.logger.warning(message + ' ' + auto_correct, stacklevel=3)
+            warnings.warn(
+                message + ' ' + auto_correct,
+                warning_type,
+                stacklevel=3
+            )
+        elif self.warnings_level in (exception_levels or (WarningsLevel.STRICT,)):
+            self.logger.error(message, stacklevel=3)
+            raise exception_type(message)

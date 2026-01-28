@@ -247,3 +247,21 @@ class Strings:
 
     LOG_CALCULATE_NORMALIZED_PATH_END = "Calculated the normalized path."
     """Calculated the normalized path."""
+
+    INVALID_INTERNAL_STATE_CHANGE: Template = Template("Expected '__init__' internal state, got '$state'.")
+    """String: \"Expected '__init__' internal state, got $state.\".
+    
+    `Settings` can accept only `__init__` state.
+
+    Placeholders:
+        $state - State name.
+    """
+
+    UNKNOWN_STATE_CHANGE: Template = Template("State '$state' is not defined in config.")
+    """String: \"State $state is not defined in config.\".
+    
+    Unknown state or config wasn't loaded.
+
+    Placeholders:
+        $state - State name.
+    """

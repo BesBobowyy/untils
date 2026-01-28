@@ -12,7 +12,6 @@ from src.input_token import (
     FinalInputTokenOption
 )
 from src.settings import Settings
-from src.utils.functions import warning
 from src.utils.lib_warnings import (
     InputStructureWarning, InputValuesWarning, InputStructureError, InputValuesError
 )
@@ -65,8 +64,7 @@ class InputValidator:
             InputStructureError: Always.
         """
 
-        warning(
-            self._settings,
+        self._settings.warning(
             Strings.END_OF_INPUT,
             Strings.AUTO_CORRECT_WITH_REMOVING,
             InputStructureWarning,
@@ -101,8 +99,7 @@ class InputValidator:
         """
 
         if self._i >= len(self._input_tokens) - offset:
-            warning(
-                self._settings,
+            self._settings.warning(
                 Strings.END_OF_INPUT,
                 Strings.AUTO_CORRECT_WITH_ACCEPTING,
                 InputStructureWarning,
@@ -141,8 +138,7 @@ class InputValidator:
             self._settings.logger.debug("Process `Word` token for the flag's name.")
             self._result.append(self.cast_token(FinalInputTokenFlag(name, value)))
         else:
-            warning(
-                self._settings,
+            self._settings.warning(
                 Strings.EXPECTED_SYNTAX_FLAG,
                 Strings.AUTO_CORRECT_WITH_SKIPPING,
                 InputStructureWarning,
@@ -192,8 +188,7 @@ class InputValidator:
             name += name_token.value
 
         if name == "":
-            warning(
-                self._settings,
+            self._settings.warning(
                 Strings.OPTION_NAME_INVALID,
                 Strings.AUTO_CORRECT_WITH_SKIPPING,
                 InputStructureWarning,
@@ -220,8 +215,7 @@ class InputValidator:
             self._settings.logger.debug("Process `Word` or `String` token for the option's value")
             self._result.append(self.cast_token(FinalInputTokenOption(name, value)))
         else:
-            warning(
-                self._settings,
+            self._settings.warning(
                 Strings.OPTION_VALUE_INVALID,
                 Strings.AUTO_CORRECT_WITH_SKIPPING,
                 InputStructureWarning,
@@ -341,8 +335,7 @@ class InputValidator:
 
             else:
                 self._settings.logger.debug(f"Process unknown token: {token}.")
-                warning(
-                    settings,
+                self._settings.warning(
                     Strings.UNKNOWN_TOKEN,
                     Strings.AUTO_CORRECT_WITH_SKIPPING,
                     InputStructureWarning,
@@ -470,8 +463,7 @@ class ParsedInputValidator:
 
                     if not in_state:
                         # First iteration not in states.
-                        warning(
-                            settings,
+                        settings.warning(
                             Strings.COMMAND_NOT_IN_CURRENT_STATE.substitute(
                                 state=settings.current_state
                             ),
@@ -489,8 +481,7 @@ class ParsedInputValidator:
 
                 return True
 
-            warning(
-                settings,
+            settings.warning(
                 Strings.INPUT_PATH_INVALID.substitute(name=input_dict["path"][i]),
                 Strings.AUTO_CORRECT_WITH_SKIPPING,
                 InputValuesWarning,

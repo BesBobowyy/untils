@@ -16,7 +16,6 @@ from src.utils.lib_warnings import (
     ConfigStructureWarning, ConfigValuesWarning, ConfigStructureError, ConfigValuesError
 )
 from src.utils.constants import Constants, Strings
-from src.utils.functions import warning
 
 from src.settings import Settings
 
@@ -51,16 +50,14 @@ class ConfigValidator:
             version = config_dict["version"]
 
             if version not in ConfigVersions:
-                warning(
-                    settings,
+                settings.warning(
                     Strings.INVALID_CONFIG_VERSION.substitute(version=repr(version)),
                     Strings.AUTO_CORRECT_TO_LATEST,
                     ConfigValuesWarning,
                     ConfigValuesError
                 )
         else:
-            warning(
-                settings,
+            settings.warning(
                 Strings.INVALID_CONFIG_VERSION.substitute(version=Strings.UNKNOWN_VERSION),
                 Strings.AUTO_CORRECT_TO_LATEST,
                 ConfigStructureWarning,
@@ -96,16 +93,14 @@ class ConfigValidator:
             if command_dict["type"] in get_args(CommandType):
                 command_type = command_dict["type"]
             else:
-                warning(
-                    settings,
+                settings.warning(
                     Strings.COMMAND_INVALID_TYPE,
                     Strings.AUTO_CORRECT_WITH_SKIPPING,
                     ConfigValuesWarning,
                     ConfigValuesError
                 )
         else:
-            warning(
-                settings,
+            settings.warning(
                 Strings.COMMAND_UNKNOWN_TYPE,
                 Strings.AUTO_CORRECT_WITH_SKIPPING,
                 ConfigStructureWarning,
@@ -140,8 +135,7 @@ class ConfigValidator:
 
         if "aliases" in command_dict:
             if not isinstance(command_dict["aliases"], list):
-                warning(
-                    settings,
+                settings.warning(
                     Strings.COMMAND_INVALID_ALIASES,
                     Strings.AUTO_CORRECT_TO_DEFAULTS,
                     ConfigStructureWarning,
@@ -150,8 +144,7 @@ class ConfigValidator:
             else:
                 for alias in command_dict["aliases"]:
                     if not isinstance(alias, str):
-                        warning(
-                            settings,
+                        settings.warning(
                             Strings.COMMAND_ALIAS_INVALID.substitute(alias=alias),
                             Strings.AUTO_CORRECT_WITH_CASTING,
                             ConfigValuesWarning,
@@ -160,8 +153,7 @@ class ConfigValidator:
                         alias = str(alias)
 
                     if alias in aliases:
-                        warning(
-                            settings,
+                        settings.warning(
                             Strings.COMMAND_ALIAS_COPIED.substitute(alias=alias),
                             Strings.AUTO_CORRECT_WITH_SKIPPING,
                             ConfigValuesWarning,
@@ -224,8 +216,7 @@ class ConfigValidator:
             arguments["aliases"] = ConfigValidator.validate_command_aliases(settings, command_dict)
 
         if command_type not in ("word", "flag", "option") and "aliases" in command_dict:
-            warning(
-                settings,
+            settings.warning(
                 Strings.COMMAND_INVALID_TYPE,
                 Strings.AUTO_CORRECT_WITH_SKIPPING,
                 ConfigStructureWarning,
@@ -236,8 +227,7 @@ class ConfigValidator:
         if command_type in ("fallback", "flag", "option"):
             arguments["default"] = ConfigValidator.validate_command_default(command_dict)
         if command_type not in ("fallback", "flag", "option") and "default" in command_dict:
-            warning(
-                settings,
+            settings.warning(
                 Strings.COMMAND_INVALID_TYPE,
                 Strings.AUTO_CORRECT_WITH_SKIPPING,
                 ConfigStructureWarning,
@@ -261,16 +251,14 @@ class ConfigValidator:
                         arguments["children"][k] = child
 
                 if arguments["children"] == {}:
-                    warning(
-                        settings,
+                    settings.warning(
                         Strings.COMMAND_INVALID_CHILDREN,
                         Strings.AUTO_CORRECT_WITH_REMOVING,
                         ConfigValuesWarning,
                         ConfigValuesError
                     )
         if command_type not in ("word", "fallback") and "children" in command_dict:
-            warning(
-                settings,
+            settings.warning(
                 Strings.COMMAND_INVALID_TYPE,
                 Strings.AUTO_CORRECT_WITH_SKIPPING,
                 ConfigStructureWarning,
@@ -305,8 +293,7 @@ class ConfigValidator:
         """
 
         if not isinstance(name, str):
-            warning(
-                settings,
+            settings.warning(
                 Strings.COMMAND_INVALID_ALIASES,
                 Strings.AUTO_CORRECT_WITH_CASTING,
                 ConfigValuesWarning,
@@ -315,8 +302,7 @@ class ConfigValidator:
             name = str(name)
 
         if name == ''.join([" "] * len(name)):
-            warning(
-                settings,
+            settings.warning(
                 Strings.COMMAND_NAME_EMPTY,
                 Strings.AUTO_CORRECT_WITH_REMOVING,
                 ConfigValuesWarning,
@@ -335,8 +321,7 @@ class ConfigValidator:
         while i < len(name):
             if name[i] == '-' and not found_letter:
                 # '-' as invalid separator.
-                warning(
-                    settings,
+                settings.warning(
                     Strings.COMMAND_NAME_STARTS_INVALID,
                     Strings.AUTO_CORRECT_WITH_REMOVING,
                     ConfigValuesWarning,
@@ -353,8 +338,7 @@ class ConfigValidator:
                             i += 1
                         if i - start == 2:
                             continue
-                        warning(
-                            settings,
+                        settings.warning(
                             Strings.STATE_INTERNAL_NAME_INVALID.substitute(length=i - start),
                             Strings.AUTO_CORRECT_TO_DEFAULTS,
                             ConfigValuesWarning,
@@ -375,8 +359,7 @@ class ConfigValidator:
                         continue
 
                     if i > 0 and not found_dollar:
-                        warning(
-                            settings,
+                        settings.warning(
                             Strings.COMMAND_FALLBACK_DOLLAR_MISPOSITION,
                             Strings.AUTO_CORRECT_WITH_REMOVING,
                             ConfigValuesWarning,
@@ -388,8 +371,7 @@ class ConfigValidator:
                         continue
 
                     if found_dollar:
-                        warning(
-                            settings,
+                        settings.warning(
                             Strings.COMMAND_FALLBACK_DOLLAR_OVERLOAD,
                             Strings.AUTO_CORRECT_WITH_REMOVING,
                             ConfigValuesWarning,
@@ -399,8 +381,7 @@ class ConfigValidator:
                         i += 1
                         continue
 
-                warning(
-                    settings,
+                settings.warning(
                     Strings.COMMAND_NAME_SPECIAL.substitute(character=name[i]),
                     Strings.AUTO_CORRECT_WITH_REMOVING,
                     ConfigValuesWarning,
@@ -412,8 +393,7 @@ class ConfigValidator:
                 found_letter = True
             else:
                 # Character is unknown.
-                warning(
-                    settings,
+                settings.warning(
                     Strings.UNKNOWN_CHARACTER.substitute(character=name[i]),
                     Strings.AUTO_CORRECT_WITH_SKIPPING,
                     ConfigValuesWarning,
@@ -428,8 +408,7 @@ class ConfigValidator:
 
         if is_fallback and not found_dollar:
             # The `Fallback` standart warning.
-            warning(
-                settings,
+            settings.warning(
                 Strings.COMMAND_FALLBACK_DOLLAR_NOT_FOUND,
                 '',
                 ConfigValuesWarning,
@@ -465,8 +444,7 @@ class ConfigValidator:
         used_aliases: List[str] = []
 
         if "commands" not in config_dict:
-            warning(
-                settings,
+            settings.warning(
                 Strings.INVALID_CONFIG_COMMANDS,
                 Strings.AUTO_CORRECT_TO_DEFAULTS,
                 ConfigStructureWarning,
@@ -475,8 +453,7 @@ class ConfigValidator:
             return {}
 
         if not isinstance(config_dict["commands"], dict):
-            warning(
-                settings,
+            settings.warning(
                 Strings.INVALID_CONFIG_COMMANDS,
                 Strings.AUTO_CORRECT_TO_DEFAULTS,
                 ConfigStructureWarning,
@@ -505,16 +482,14 @@ class ConfigValidator:
                         alias = ConfigValidator.validate_name(settings, alias)
 
                         if alias in used_aliases:
-                            warning(
-                                settings,
+                            settings.warning(
                                 Strings.COMMAND_ALIAS_COPIED.substitute(alias=alias),
                                 Strings.AUTO_CORRECT_WITH_REMOVING,
                                 ConfigValuesWarning,
                                 ConfigValuesError
                             )
                         elif alias == key:
-                            warning(
-                                settings,
+                            settings.warning(
                                 Strings.COMMAND_ALIAS_REDUNDANCY.substitute(alias=alias),
                                 Strings.AUTO_CORRECT_WITH_REMOVING,
                                 ConfigValuesWarning,
@@ -560,8 +535,7 @@ class ConfigValidator:
         command_names: List[str] = [key for key in list(commands.keys())]
 
         if not "states" in config_dict:
-            warning(
-                settings,
+            settings.warning(
                 Strings.INVALID_CONFIG_STATES,
                 Strings.AUTO_CORRECT_TO_DEFAULTS,
                 ConfigStructureWarning,
@@ -572,8 +546,7 @@ class ConfigValidator:
             }
 
         if not isinstance(config_dict["states"], dict):
-            warning(
-                settings,
+            settings.warning(
                 Strings.INVALID_CONFIG_STATES,
                 Strings.AUTO_CORRECT_TO_DEFAULTS,
                 ConfigStructureWarning,
@@ -593,8 +566,7 @@ class ConfigValidator:
                 and state not in get_args(InternalCommandStates)
             ):
                 # An internal state is not written in `InternalCommandStates`.
-                warning(
-                    settings,
+                settings.warning(
                     Strings.STATE_INVALID_NAME,
                     Strings.AUTO_CORRECT_WITH_RENAMING,
                     ConfigValuesWarning,
@@ -610,8 +582,7 @@ class ConfigValidator:
 
                 if name not in command_names:
                     # Unknown command name.
-                    warning(
-                        settings,
+                    settings.warning(
                         Strings.COMMAND_UNKNOWN_NAME,
                         Strings.AUTO_CORRECT_WITH_SKIPPING,
                         ConfigValuesWarning,
