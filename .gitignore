@@ -5,3 +5,6 @@ NOTE_*
 Thumbs.db
 code_tests/
 *.log
+dist/
+build/
+*.egg-info/
