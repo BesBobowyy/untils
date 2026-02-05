@@ -1,5 +1,6 @@
 __pycache__/
 .dev_utils/
+.pytest_cache/
 NOTE_*
 Thumbs.db
 code_tests/
