@@ -7,17 +7,17 @@ from typing import Dict, get_args, Optional, List, Any
 
 from string import punctuation
 
-from src.utils.type_aliases import (
+from untils.utils.type_aliases import (
     ConfigType, UnknownConfigType, ConfigVersion, UnknownCommandClass, CommandClass, CommandType,
     UnknownCommandConfig, CommandStates, InternalCommandStates
 )
-from src.utils.enums import ConfigVersions, WarningsLevel
-from src.utils.lib_warnings import (
+from untils.utils.enums import ConfigVersions, WarningsLevel
+from untils.utils.lib_warnings import (
     ConfigStructureWarning, ConfigValuesWarning, ConfigStructureError, ConfigValuesError
 )
-from src.utils.constants import Constants, Strings
+from untils.utils.constants import Constants, Strings
 
-from src.settings import Settings
+from untils.settings import Settings
 
 class ConfigValidator:
     """Validator class for config structure and semantic."""

@@ -7,11 +7,11 @@ from typing import Dict, override
 import json
 import os
 
-from src.utils.type_aliases import UnknownConfigType, ConfigSupportedExtensions
-from src.iovalidator import IOValidator
-from src.utils.protocols import IOReaderMixin, IOReaderProtocol
+from untils.utils.type_aliases import UnknownConfigType, ConfigSupportedExtensions
+from untils.iovalidator import IOValidator
+from untils.utils.protocols import IOReaderMixin, IOReaderProtocol
 
-from src.settings import Settings
+from untils.settings import Settings
 
 class JSONMixin(IOReaderMixin):
     """The JSON extension for `IOReader`."""

@@ -7,7 +7,7 @@ from typing import Tuple, Literal
 
 from string import Template
 
-from src.utils.enums import ConfigVersions
+from untils.utils.enums import ConfigVersions
 
 class Constants:
     """The library constants."""

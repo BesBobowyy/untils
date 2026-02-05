@@ -6,7 +6,7 @@ from typing import Any, Literal
 
 from dataclasses import dataclass
 
-from src.utils.enums import RawTokenType, FinalTokenType
+from untils.utils.enums import RawTokenType, FinalTokenType
 
 @dataclass(frozen=True)
 class RawInputToken:

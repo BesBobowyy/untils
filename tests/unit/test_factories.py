@@ -11,51 +11,51 @@ from typing import List, Any
 
 import pytest
 
-import src
+import untils
 
 def test_command_node_factory() -> None:
     """Tests `CommandNodeFactory` class."""
 
     # `Word` node.
     name: str = "word_node"
-    node_type: src.utils.CommandType = "word"
-    aliases: List[src.AliasNode] = [src.AliasNode("word_node", "wn")]
+    node_type: untils.utils.CommandType = "word"
+    aliases: List[untils.AliasNode] = [untils.AliasNode("word_node", "wn")]
     default: Any = None
-    children: List[src.CommandNode] = []
+    children: List[untils.CommandNode] = []
 
-    assert src.CommandNodeFactory.create(
+    assert untils.CommandNodeFactory.create(
         name, node_type, aliases, default, children
     ) is not None
 
     # `Fallback` node.
     name: str = "fallback_node"
-    node_type: src.utils.CommandType = "fallback"
-    aliases: List[src.AliasNode] = [src.AliasNode("fallback_node", "fan")]
+    node_type: untils.utils.CommandType = "fallback"
+    aliases: List[untils.AliasNode] = [untils.AliasNode("fallback_node", "fan")]
     default: Any = None
-    children: List[src.CommandNode] = []
+    children: List[untils.CommandNode] = []
 
-    assert src.CommandNodeFactory.create(
+    assert untils.CommandNodeFactory.create(
         name, node_type, aliases, default, children
     ) is not None
 
     # `Flag` node.
     name: str = "flag_node"
-    node_type: src.utils.CommandType = "flag"
-    aliases: List[src.AliasNode] = [src.AliasNode("flag_node", "fln")]
+    node_type: untils.utils.CommandType = "flag"
+    aliases: List[untils.AliasNode] = [untils.AliasNode("flag_node", "fln")]
     default: Any = None
-    children: List[src.CommandNode] = []
+    children: List[untils.CommandNode] = []
 
-    assert src.CommandNodeFactory.create(
+    assert untils.CommandNodeFactory.create(
         name, node_type, aliases, default, children
     ) is not None
 
     # `Option` node.
     name: str = "option_node"
-    node_type: src.utils.CommandType = "option"
-    aliases: List[src.AliasNode] = [src.AliasNode("option_node", "on")]
+    node_type: untils.utils.CommandType = "option"
+    aliases: List[untils.AliasNode] = [untils.AliasNode("option_node", "on")]
     default: Any = None
-    children: List[src.CommandNode] = []
+    children: List[untils.CommandNode] = []
 
-    assert src.CommandNodeFactory.create(
+    assert untils.CommandNodeFactory.create(
         name, node_type, aliases, default, children
     ) is not None

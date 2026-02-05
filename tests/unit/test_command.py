@@ -11,24 +11,24 @@ from typing import Tuple
 
 import pytest
 
-import src
+import untils
 
 def test_command_node() -> None:
     """Tests `CommandNode`."""
 
     #-- STAGE 1: Construnctors --#
-    word_command_node: src.CommandWordNode = src.CommandWordNode(
+    word_command_node: untils.CommandWordNode = untils.CommandWordNode(
         "word_command_node",
         "word",
-        [src.AliasNode("word", "w")],
+        [untils.AliasNode("word", "w")],
         []
     )
     assert word_command_node.name == "word_command_node"
     assert word_command_node.type == "word"
-    assert word_command_node.aliases == [src.AliasNode("word", "w")]
+    assert word_command_node.aliases == [untils.AliasNode("word", "w")]
     assert not word_command_node.children
 
-    fallback_command_node: src.CommandFallbackNode = src.CommandFallbackNode(
+    fallback_command_node: untils.CommandFallbackNode = untils.CommandFallbackNode(
         "fallback_command_node",
         "fallback",
         "null",
@@ -39,30 +39,30 @@ def test_command_node() -> None:
     assert fallback_command_node.default == "null"
     assert not fallback_command_node.children
 
-    flag_command_node: src.CommandFlagNode = src.CommandFlagNode(
+    flag_command_node: untils.CommandFlagNode = untils.CommandFlagNode(
         "flag_command_node",
         "flag",
-        [src.AliasNode("flag", "f")],
+        [untils.AliasNode("flag", "f")],
         None
     )
     assert flag_command_node.name == "flag_command_node"
     assert flag_command_node.type == "flag"
-    assert flag_command_node.aliases == [src.AliasNode("flag", "f")]
+    assert flag_command_node.aliases == [untils.AliasNode("flag", "f")]
     assert flag_command_node.default is None
 
-    option_command_node: src.CommandOptionNode = src.CommandOptionNode(
+    option_command_node: untils.CommandOptionNode = untils.CommandOptionNode(
         "option_command_node",
         "option",
-        [src.AliasNode("option", "o")],
+        [untils.AliasNode("option", "o")],
         None
     )
     assert option_command_node.name == "option_command_node"
     assert option_command_node.type == "option"
-    assert option_command_node.aliases == [src.AliasNode("option", "o")]
+    assert option_command_node.aliases == [untils.AliasNode("option", "o")]
     assert option_command_node.default is None
 
     #-- STAGE 2: Equals --#
-    nodes: Tuple[src.CommandNode, ...] = (
+    nodes: Tuple[untils.CommandNode, ...] = (
         word_command_node,
         fallback_command_node,
         flag_command_node,
@@ -82,12 +82,12 @@ def test_command_node() -> None:
             # `Fallback` nodes hasn't aliases.
             continue
 
-        correct_alias: src.AliasNode = src.AliasNode(node.name, str(i))
-        incorrect_alias: src.AliasNode = src.AliasNode(node.name+"_alias", str(i))
+        correct_alias: untils.AliasNode = untils.AliasNode(node.name, str(i))
+        incorrect_alias: untils.AliasNode = untils.AliasNode(node.name+"_alias", str(i))
 
         assert correct_alias == node
         assert incorrect_alias != node
 
     # `Fallback` aliases are always incorrect.
-    fallback_alias: src.AliasNode = src.AliasNode(fallback_command_node.name, "fnode")
+    fallback_alias: untils.AliasNode = untils.AliasNode(fallback_command_node.name, "fnode")
     assert fallback_alias != fallback_command_node

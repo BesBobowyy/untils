@@ -4,9 +4,9 @@ from typing import List
 
 from dataclasses import dataclass
 
-from src.utils.type_aliases import ConfigVersion
+from untils.utils.type_aliases import ConfigVersion
 
-from src.command import StateNode, CommandNode
+from untils.command import StateNode, CommandNode
 
 @dataclass(frozen=True)
 class CommandsConfig:

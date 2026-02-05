@@ -4,9 +4,9 @@
 
 from typing import List, Any
 
-from src.utils.type_aliases import CommandType
+from untils.utils.type_aliases import CommandType
 
-from src.command import (
+from untils.command import (
     CommandNode, CommandWordNode, CommandFallbackNode, CommandFlagNode, CommandOptionNode, AliasNode
 )
 

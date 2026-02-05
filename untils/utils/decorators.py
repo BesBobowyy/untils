@@ -6,7 +6,7 @@ from functools import wraps
 
 from typing import Callable, Any, TypeVar
 
-from src.utils.constants import Strings
+from untils.utils.constants import Strings
 
 T = TypeVar("T", bound=Callable[..., Any])
 

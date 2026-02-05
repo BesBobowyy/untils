@@ -7,10 +7,10 @@
 from typing import Protocol, Any, runtime_checkable
 from abc import ABC, abstractmethod
 
-from src.utils.type_aliases import UnknownConfigType
-from src.utils.enums import FinalTokenType
+from untils.utils.type_aliases import UnknownConfigType
+from untils.utils.enums import FinalTokenType
 
-from src.settings import Settings
+from untils.settings import Settings
 
 class IOReaderMixin(ABC):
     """The abstract class for all IOReader mixins."""

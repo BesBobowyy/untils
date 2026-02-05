@@ -2,21 +2,21 @@
 
 from typing import List, Literal, cast, Union, Dict, Optional
 
-from src.utils.type_aliases import InputDict
-from src.utils.enums import RawTokenType, FinalTokenType, InternalState
-from src.utils.constants import Strings
-from src.utils.protocols import FinalInputProtocol
+from untils.utils.type_aliases import InputDict
+from untils.utils.enums import RawTokenType, FinalTokenType, InternalState
+from untils.utils.constants import Strings
+from untils.utils.protocols import FinalInputProtocol
 
-from src.input_token import (
+from untils.input_token import (
     RawInputToken, FinalInputTokenWord, FinalInputTokenFlag,
     FinalInputTokenOption
 )
-from src.settings import Settings
-from src.utils.lib_warnings import (
+from untils.settings import Settings
+from untils.utils.lib_warnings import (
     InputStructureWarning, InputValuesWarning, InputStructureError, InputValuesError
 )
-from src.commands_config import CommandsConfig
-from src.command import (
+from untils.commands_config import CommandsConfig
+from untils.command import (
     CommandNode, CommandWordNode, CommandFallbackNode, CommandFlagNode, CommandOptionNode
 )
 

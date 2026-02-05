@@ -4,7 +4,7 @@ from typing import List, Any
 
 from dataclasses import dataclass
 
-from src.utils.type_aliases import CommandType
+from untils.utils.type_aliases import CommandType
 
 @dataclass(frozen=True)
 class AliasNode():

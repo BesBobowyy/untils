@@ -2,17 +2,17 @@
 
 from typing import List, Optional
 
-from src.utils.type_aliases import UnknownConfigType, ConfigType, InputDict
-from src.utils.protocols import FinalInputProtocol
+from untils.utils.type_aliases import UnknownConfigType, ConfigType, InputDict
+from untils.utils.protocols import FinalInputProtocol
 
-from src.ioreader import IOReader
-from src.config_validator import ConfigValidator
-from src.parser import Parser
-from src.commands_config import CommandsConfig
-from src.settings import Settings
-from src.input_token import RawInputToken
-from src.tokenizer import Tokenizer
-from src.input_validator import InputValidator
+from untils.ioreader import IOReader
+from untils.config_validator import ConfigValidator
+from untils.parser import Parser
+from untils.commands_config import CommandsConfig
+from untils.settings import Settings
+from untils.input_token import RawInputToken
+from untils.tokenizer import Tokenizer
+from untils.input_validator import InputValidator
 
 class Processor:
     """Processor class for config processing."""

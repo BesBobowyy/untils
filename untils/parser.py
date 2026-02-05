@@ -2,17 +2,17 @@
 
 from typing import Dict, List, Any, cast, get_args, Optional
 
-from src.utils.type_aliases import (
+from untils.utils.type_aliases import (
     CommandClass, CommandType, ConfigType, InternalCommandStates, InputDict
 )
-from src.utils.protocols import FinalInputProtocol
-from src.utils.enums import FinalTokenType
+from untils.utils.protocols import FinalInputProtocol
+from untils.utils.enums import FinalTokenType
 
-from src.command import CommandNode, AliasNode, StateNode
-from src.factories import CommandNodeFactory
-from src.commands_config import CommandsConfig
-from src.input_token import FinalInputTokenWord, FinalInputTokenFlag, FinalInputTokenOption
-from src.settings import Settings
+from untils.command import CommandNode, AliasNode, StateNode
+from untils.factories import CommandNodeFactory
+from untils.commands_config import CommandsConfig
+from untils.input_token import FinalInputTokenWord, FinalInputTokenFlag, FinalInputTokenOption
+from untils.settings import Settings
 
 class Parser:
     """This class parses raw data to intermediate reference."""

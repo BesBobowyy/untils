@@ -2,10 +2,10 @@
 
 from typing import List, Literal, cast
 
-from src.utils.enums import RawTokenType
-from src.input_token import RawInputToken
+from untils.utils.enums import RawTokenType
+from untils.input_token import RawInputToken
 
-from src.settings import Settings
+from untils.settings import Settings
 
 class Tokenizer:
     """Tokenizer class, which tokenizes user input."""

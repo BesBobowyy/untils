@@ -15,17 +15,17 @@ from typing import Tuple, TypeAlias
 
 import pytest
 
-import src
+import untils
 
-Objects: TypeAlias = Tuple[src.Settings, src.CommandsConfig, src.InputValidator]
+Objects: TypeAlias = Tuple[untils.Settings, untils.CommandsConfig, untils.InputValidator]
 
 @pytest.fixture
 def objects() -> Objects:
     """Fixture for `pytest`."""
 
-    settings: src.Settings = src.Settings()
-    config: src.CommandsConfig = src.CommandsConfig(1, [], [])
-    input_validator: src.InputValidator = src.InputValidator(settings, config, [])
+    settings: untils.Settings = untils.Settings()
+    config: untils.CommandsConfig = untils.CommandsConfig(1, [], [])
+    input_validator: untils.InputValidator = untils.InputValidator(settings, config, [])
     return (settings, config, input_validator)
 
 def test_init(objects: Objects) -> None:
@@ -44,29 +44,29 @@ def test_warning_out_of_bounce(objects: Objects) -> None:
 
     settings, _, input_validator = objects
 
-    settings.warnings_level = src.utils.WarningsLevel.BASIC
-    pytest.warns(src.utils.InputStructureWarning, input_validator.warning_out_of_bounce)
+    settings.warnings_level = untils.utils.WarningsLevel.BASIC
+    pytest.warns(untils.utils.InputStructureWarning, input_validator.warning_out_of_bounce)
 
-    settings.warnings_level = src.utils.WarningsLevel.STRICT
-    pytest.raises(src.utils.InputStructureError, input_validator.warning_out_of_bounce)
+    settings.warnings_level = untils.utils.WarningsLevel.STRICT
+    pytest.raises(untils.utils.InputStructureError, input_validator.warning_out_of_bounce)
 
 def test_expect_end(objects: Objects) -> None:
     """Tests `InputValidator.expect_end` method."""
 
     settings, _, input_validator = objects
 
-    input_validator._input_tokens = [src.RawInputToken(src.utils.RawTokenType.WORD, "test")]
+    input_validator._input_tokens = [untils.RawInputToken(untils.utils.RawTokenType.WORD, "test")]
 
     for i in range(-2, 3):
-        for level in (src.utils.WarningsLevel.BASIC, src.utils.WarningsLevel.STRICT):
+        for level in (untils.utils.WarningsLevel.BASIC, untils.utils.WarningsLevel.STRICT):
             settings.warnings_level = level
 
-            expected_warning = src.utils.InputValuesWarning if i <= 0 else src.utils.InputStructureWarning
-            expected_exception = src.utils.InputValuesError if i <= 0 else src.utils.InputStructureError
+            expected_warning = untils.utils.InputValuesWarning if i <= 0 else untils.utils.InputStructureWarning
+            expected_exception = untils.utils.InputValuesError if i <= 0 else untils.utils.InputStructureError
 
-            if level == src.utils.WarningsLevel.BASIC:
+            if level == untils.utils.WarningsLevel.BASIC:
                 pytest.warns(expected_warning, functools.partial(input_validator.expect_end, i))
-            elif level == src.utils.WarningsLevel.STRICT:
+            elif level == untils.utils.WarningsLevel.STRICT:
                 pytest.raises(expected_exception, functools.partial(input_validator.expect_end, i))
 
 def test_validation_by_parts(objects: Objects) -> None:
@@ -75,135 +75,135 @@ def test_validation_by_parts(objects: Objects) -> None:
     settings, config, _ = objects
 
     # `Word` token.
-    input_validator: src.InputValidator = src.InputValidator(
+    input_validator: untils.InputValidator = untils.InputValidator(
         settings,
         config,
         [
-            src.RawInputToken(src.utils.RawTokenType.WORD, "word")
+            untils.RawInputToken(untils.utils.RawTokenType.WORD, "word")
         ]
     )
 
     input_validator.validate_token_word()
-    assert input_validator._result == [src.FinalInputTokenWord("word")]
+    assert input_validator._result == [untils.FinalInputTokenWord("word")]
     assert input_validator._i == 1
 
     # `Flag` token.
     del input_validator
-    input_validator: src.InputValidator = src.InputValidator(
+    input_validator: untils.InputValidator = untils.InputValidator(
         settings,
         config,
         [
-            src.RawInputToken(src.utils.RawTokenType.WORD, "T")
+            untils.RawInputToken(untils.utils.RawTokenType.WORD, "T")
         ]
     )
 
     input_validator.validate_token_flag()
-    assert input_validator._result == [src.FinalInputTokenFlag("T", True)]
+    assert input_validator._result == [untils.FinalInputTokenFlag("T", True)]
     assert input_validator._i == 0
 
     del input_validator
-    input_validator: src.InputValidator = src.InputValidator(
+    input_validator: untils.InputValidator = untils.InputValidator(
         settings,
         config,
         [
-            src.RawInputToken(src.utils.RawTokenType.NOT, "!"),
-            src.RawInputToken(src.utils.RawTokenType.WORD, "T")
+            untils.RawInputToken(untils.utils.RawTokenType.NOT, "!"),
+            untils.RawInputToken(untils.utils.RawTokenType.WORD, "T")
         ]
     )
 
     input_validator.validate_token_flag()
-    assert input_validator._result == [src.FinalInputTokenFlag("T", False)]
+    assert input_validator._result == [untils.FinalInputTokenFlag("T", False)]
     assert input_validator._i == 1
 
     del input_validator
-    input_validator: src.InputValidator = src.InputValidator(
+    input_validator: untils.InputValidator = untils.InputValidator(
         settings,
         config,
         [
-            src.RawInputToken(src.utils.RawTokenType.NOT, "!"),
-            src.RawInputToken(src.utils.RawTokenType.NOT, "!"),
-            src.RawInputToken(src.utils.RawTokenType.WORD, "T")
+            untils.RawInputToken(untils.utils.RawTokenType.NOT, "!"),
+            untils.RawInputToken(untils.utils.RawTokenType.NOT, "!"),
+            untils.RawInputToken(untils.utils.RawTokenType.WORD, "T")
         ]
     )
 
-    pytest.raises(src.utils.InputStructureError, input_validator.validate_token_flag)
+    pytest.raises(untils.utils.InputStructureError, input_validator.validate_token_flag)
 
     del input_validator
-    input_validator: src.InputValidator = src.InputValidator(
+    input_validator: untils.InputValidator = untils.InputValidator(
         settings,
         config,
         [
-            src.RawInputToken(src.utils.RawTokenType.NOT, "!"),
-            src.RawInputToken(src.utils.RawTokenType.MINUS, "-"),
-            src.RawInputToken(src.utils.RawTokenType.WORD, "T")
+            untils.RawInputToken(untils.utils.RawTokenType.NOT, "!"),
+            untils.RawInputToken(untils.utils.RawTokenType.MINUS, "-"),
+            untils.RawInputToken(untils.utils.RawTokenType.WORD, "T")
         ]
     )
 
-    pytest.raises(src.utils.InputStructureError, input_validator.validate_token_flag)
+    pytest.raises(untils.utils.InputStructureError, input_validator.validate_token_flag)
 
     del input_validator
-    input_validator: src.InputValidator = src.InputValidator(
+    input_validator: untils.InputValidator = untils.InputValidator(
         settings,
         config,
         [
-            src.RawInputToken(src.utils.RawTokenType.NOT, "!"),
-            src.RawInputToken(src.utils.RawTokenType.SPACE, " "),
-            src.RawInputToken(src.utils.RawTokenType.WORD, "T")
+            untils.RawInputToken(untils.utils.RawTokenType.NOT, "!"),
+            untils.RawInputToken(untils.utils.RawTokenType.SPACE, " "),
+            untils.RawInputToken(untils.utils.RawTokenType.WORD, "T")
         ]
     )
 
-    pytest.raises(src.utils.InputStructureError, input_validator.validate_token_flag)
+    pytest.raises(untils.utils.InputStructureError, input_validator.validate_token_flag)
 
     # `Option` token.
     del input_validator
-    input_validator: src.InputValidator = src.InputValidator(
+    input_validator: untils.InputValidator = untils.InputValidator(
         settings,
         config,
         [
-            src.RawInputToken(src.utils.RawTokenType.WORD, "name"),
-            src.RawInputToken(src.utils.RawTokenType.SPACE, ' '),
-            src.RawInputToken(src.utils.RawTokenType.WORD, "value")
+            untils.RawInputToken(untils.utils.RawTokenType.WORD, "name"),
+            untils.RawInputToken(untils.utils.RawTokenType.SPACE, ' '),
+            untils.RawInputToken(untils.utils.RawTokenType.WORD, "value")
         ]
     )
 
     input_validator.validate_token_option()
-    assert input_validator._result == [src.FinalInputTokenOption("name", "value")]
+    assert input_validator._result == [untils.FinalInputTokenOption("name", "value")]
     assert input_validator._i == 2
 
     del input_validator
-    input_validator: src.InputValidator = src.InputValidator(
+    input_validator: untils.InputValidator = untils.InputValidator(
         settings,
         config,
         [
-            src.RawInputToken(src.utils.RawTokenType.WORD, "option"),
-            src.RawInputToken(src.utils.RawTokenType.MINUS, "-"),
-            src.RawInputToken(src.utils.RawTokenType.WORD, "name"),
-            src.RawInputToken(src.utils.RawTokenType.SPACE, ' '),
-            src.RawInputToken(src.utils.RawTokenType.WORD, "value")
+            untils.RawInputToken(untils.utils.RawTokenType.WORD, "option"),
+            untils.RawInputToken(untils.utils.RawTokenType.MINUS, "-"),
+            untils.RawInputToken(untils.utils.RawTokenType.WORD, "name"),
+            untils.RawInputToken(untils.utils.RawTokenType.SPACE, ' '),
+            untils.RawInputToken(untils.utils.RawTokenType.WORD, "value")
         ]
     )
 
     input_validator.validate_token_option()
-    assert input_validator._result == [src.FinalInputTokenOption("option-name", "value")]
+    assert input_validator._result == [untils.FinalInputTokenOption("option-name", "value")]
     assert input_validator._i == 4
 
     del input_validator
-    input_validator: src.InputValidator = src.InputValidator(
+    input_validator: untils.InputValidator = untils.InputValidator(
         settings,
         config,
         [
-            src.RawInputToken(src.utils.RawTokenType.WORD, "option"),
-            src.RawInputToken(src.utils.RawTokenType.MINUS, "-"),
-            src.RawInputToken(src.utils.RawTokenType.WORD, "name"),
-            src.RawInputToken(src.utils.RawTokenType.SPACE, ' '),
-            src.RawInputToken(src.utils.RawTokenType.WORD, "option"),
-            src.RawInputToken(src.utils.RawTokenType.MINUS, "-"),
-            src.RawInputToken(src.utils.RawTokenType.WORD, "value")
+            untils.RawInputToken(untils.utils.RawTokenType.WORD, "option"),
+            untils.RawInputToken(untils.utils.RawTokenType.MINUS, "-"),
+            untils.RawInputToken(untils.utils.RawTokenType.WORD, "name"),
+            untils.RawInputToken(untils.utils.RawTokenType.SPACE, ' '),
+            untils.RawInputToken(untils.utils.RawTokenType.WORD, "option"),
+            untils.RawInputToken(untils.utils.RawTokenType.MINUS, "-"),
+            untils.RawInputToken(untils.utils.RawTokenType.WORD, "value")
         ]
     )
 
     input_validator.validate_token_option()
-    assert input_validator._result == [src.FinalInputTokenOption("option-name", "option-value")]
+    assert input_validator._result == [untils.FinalInputTokenOption("option-name", "option-value")]
     assert input_validator._i == 7
 
     # TODO: Finish test.
