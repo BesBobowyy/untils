@@ -1,3 +1,7 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "untils"
 version = "1.0.0"
@@ -12,8 +16,8 @@ classifiers = [
 requires-python = ">=3.8"
 
 [project.optional-dependencies]
-dev = ["pytest"]
-docs = ["mkdocs", "mkdocs-material"]
+dev = ["pytest>=9.0.0"]
+docs = ["mkdocs>=1.6.0", "mkdocs-material"]
 
 [tool.pytest]
 minversion = "9.0"
@@ -22,6 +26,5 @@ testpaths = [
     "tests",
 ]
 
-[build-system]
-requires = ["setuptools"]
-build-backend = "setuptools.build_meta"
+[project.urls]
+GitHub = "https://github.com/BesBobowyy/untils"
