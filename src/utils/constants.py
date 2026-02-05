@@ -236,7 +236,7 @@ class Strings:
         $input_str - Input string.
     """
 
-    LOG_SETTINGS_INIT = "`mplib` was initialized with settings."
+    LOG_SETTINGS_INIT = "`untils` was initialized with settings."
     """The library was started with settings."""
 
     LOG_CONFIG_NOT_LOADED = "Config is not loaded."

@@ -1,4 +1,4 @@
-"""*mplib* - Is light-weight library for console games or small utils to process user input as commands and describe structure with config."""
+"""*untils* - Is light-weight library for console games or small utils to process user input as commands and describe structure with config."""
 
 # pyright: reportUnusedImport=false
 # ^^^^^^^ (Public imports.)
