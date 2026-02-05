@@ -49,4 +49,4 @@ With this library you save your time, code functionality and nerves, but you wor
 
 [Start Course](start-guide/01-first-project.md "Beginner course into the library.")
 
-API Reference
+[API Reference](api-reference.md "API Reference attachment.")

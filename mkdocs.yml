@@ -2,6 +2,7 @@ site_name: untils
 site_url: https://github.com/BesBobowyy/untils
 nav:
   - Welcome Page: index.md
+  - API Reference: api-reference.md
   - Start Guide:
     - 01. First script: start-guide/01-first-project.md
     - 02. Warnings level: start-guide/02-warnings-level.md
