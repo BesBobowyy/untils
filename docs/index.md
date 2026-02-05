@@ -27,9 +27,6 @@ You can install the library from PyPi:
 pip install untils
 ```
 
-!!! warning "Warning"
-    The supported minimal Python version is unknown. Versions `3.12+` are supported anyway.
-
 Test template:
 
 ```py
