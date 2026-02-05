@@ -12,7 +12,15 @@ classifiers = [
 requires-python = ">=3.8"
 
 [project.optional-dependencies]
+dev = ["pytest"]
 docs = ["mkdocs", "mkdocs-material"]
+
+[tool.pytest]
+minversion = "9.0"
+addopts = ["-v"]
+testpaths = [
+    "tests",
+]
 
 [build-system]
 requires = ["setuptools"]
