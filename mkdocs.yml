@@ -28,10 +28,4 @@ markdown_extensions:
   - pymdownx.tasklist:
       custom_checkbox: true
   - pymdownx.blocks.admonition
-  - mkdocstrings:
-    handlers:
-      python:
-        paths: [src]
-        options:
-          show_source: true
 theme: readthedocs
