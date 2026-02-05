@@ -7,7 +7,7 @@ from typing import Tuple, Literal
 
 from string import Template
 
-from src.utils.enums import LibraryVersionStatus, ConfigVersions
+from src.utils.enums import ConfigVersions
 
 class Constants:
     """The library constants."""
@@ -20,9 +20,6 @@ class Constants:
 
     LATEST_CONFIG_VERSION = ConfigVersions.V1
     """Current config version."""
-
-    VERSION: Tuple[Literal[1], Literal[0], Literal[0], Literal[LibraryVersionStatus.D]] = (1, 0, 0, LibraryVersionStatus.D)
-    """Current library version."""
 
 class Strings:
     """The library strings."""

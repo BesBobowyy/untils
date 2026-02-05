@@ -23,3 +23,5 @@ from src.parser import Parser
 from src.processor import Processor
 from src.settings import Settings
 from src.tokenizer import Tokenizer
+
+__version__ = "1.0.0"

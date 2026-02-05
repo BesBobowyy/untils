@@ -2,18 +2,6 @@
 
 from enum import IntEnum, Enum
 
-class LibraryVersionStatus(IntEnum):
-    """The library version status: \"Development\", \"Alpha\", \"Beta\" or \"Release\"."""
-
-    D = 0
-    """Development."""
-    A = 1
-    """Alpha."""
-    B = 2
-    """Beta."""
-    R = 3
-    """Release."""
-
 class WarningsLevel(IntEnum):
     """Error alerts level."""
 
