@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools"]
+requires = ["setuptools>=77.0.3"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -8,12 +8,23 @@ version = "1.0.0"
 authors = [{name = "BesBobowyy"}]
 description = "Light-weight library for console games or small utils to process user input as commands and describe structure with config."
 readme = "README.md"
-license = {text = "MIT"}
+license-files = ["README.md"]
 classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
     "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.6",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14"
 ]
 requires-python = ">=3.8"
+keywords = ["cli", "console", "lightweight"]
 
 [project.optional-dependencies]
 dev = ["pytest>=9.0.0"]
