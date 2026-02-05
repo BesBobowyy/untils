@@ -37,6 +37,16 @@ class FinalInputTokenWord:
     def __repr__(self) -> str:
         return f"FinalInputTokenWord(value={self.value})"
 
+    def __eq__(self, value: object) -> bool:
+        if isinstance(value, FinalInputTokenWord):
+            return self.value == value.value
+        return False
+
+    def __ne__(self, value: object) -> bool:
+        if isinstance(value, FinalInputTokenWord):
+            return self.value != value.value
+        return True
+
 class FinalInputTokenFlag:
     """The flag type of `FinalInputToken`."""
 
@@ -55,6 +65,16 @@ class FinalInputTokenFlag:
     def __repr__(self) -> str:
         return f"FinalInputTokenFlag(name={self.name}, value={self.value})"
 
+    def __eq__(self, value: object) -> bool:
+        if isinstance(value, FinalInputTokenFlag):
+            return self.name == value.name and self.value == value.value
+        return False
+
+    def __ne__(self, value: object) -> bool:
+        if isinstance(value, FinalInputTokenFlag):
+            return self.name != value.name or self.value != value.value
+        return True
+
 class FinalInputTokenOption:
     """The option type of `FinalInputToken`."""
 
@@ -72,3 +92,13 @@ class FinalInputTokenOption:
 
     def __repr__(self) -> str:
         return f"FinalInputTokenOption(name={self.name}, value={self.value})"
+
+    def __eq__(self, value: object) -> bool:
+        if isinstance(value, FinalInputTokenOption):
+            return self.name == value.name and self.value == value.value
+        return False
+
+    def __ne__(self, value: object) -> bool:
+        if isinstance(value, FinalInputTokenOption):
+            return self.name != value.name or self.value != value.value
+        return True
