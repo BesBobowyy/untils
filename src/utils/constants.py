@@ -265,3 +265,6 @@ class Strings:
     Placeholders:
         $state - State name.
     """
+
+    NON_POSITIVE_OFFSET = "Offset cannot be less than 1."
+    """Offset cannot be less than 1."""
