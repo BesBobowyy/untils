@@ -51,19 +51,19 @@ class CommandSystem:
         return self.config is not None
 
     def load_config(self, config_path: str) -> None:
-        """Loads a commands config.
+        """Loads a `CommandsConfig` object.
         
         Args:
-            config_path: Real path of config file on current machine.
+            config_path: Path of config file.
         """
 
         self.config = Processor.load_config(self.settings, config_path)
 
     def set_config(self, config: Optional[CommandsConfig]) -> None:
-        """Sets already cached config or deletes exist.
+        """Sets an already processed config or deletes exist.
         
         Args:
-            config: Config class or it's voidness.
+            config: A `Config` object or `None`.
         """
 
         self.config = config
