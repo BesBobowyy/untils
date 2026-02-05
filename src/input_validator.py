@@ -44,9 +44,9 @@ class InputValidator:
     ) -> None:
         """
         Args:
-            input_tokens: The raw input tokens.
+            settings: The settings.
             config: The validated and parsed commands config.
-            debug: Determines debug messages display.
+            input_tokens: The raw input tokens.
         """
 
         self._settings = settings
@@ -98,6 +98,15 @@ class InputValidator:
             InputStructureError: If the offset out of bounce.
         """
 
+        if offset <= 0:
+            self._settings.warning(
+                Strings.NON_POSITIVE_OFFSET,
+                Strings.AUTO_CORRECT_WITH_SKIPPING,
+                InputValuesWarning,
+                InputValuesError
+            )
+            return
+
         if self._i >= len(self._input_tokens) - offset:
             self._settings.warning(
                 Strings.END_OF_INPUT,
@@ -126,6 +135,19 @@ class InputValidator:
             value = False
             self.expect_end(offset=1)  # [...][CURRENT_TOKEN][!LOOKUP!][...]
             self._i += 1
+        
+        if self._input_tokens[self._i].type != RawTokenType.WORD:
+            self._settings.warning(
+                Strings.EXPECTED_SYNTAX_FLAG,
+                Strings.AUTO_CORRECT_WITH_SKIPPING,
+                InputStructureWarning,
+                InputStructureError
+            )
+            while (
+                self._i <= len(self._input_tokens)
+                and self._input_tokens[self._i].type != RawTokenType.WORD
+            ):
+                self._i += 1
 
         name_tokens: List[RawInputToken] = self.validate_name_tokens()
         name: str = ""
@@ -158,6 +180,15 @@ class InputValidator:
         name_tokens: List[RawInputToken] = [current_token]
 
         if current_token.type == RawTokenType.STRING:
+            return name_tokens
+        if current_token.type not in (RawTokenType.WORD, RawTokenType.MINUS):
+            self._settings.warning(
+                Strings.COMMAND_UNKNOWN_NAME,
+                Strings.AUTO_CORRECT_WITH_SKIPPING,
+                InputStructureWarning,
+                InputStructureError
+            )
+            self._i += 1
             return name_tokens
 
         if self._i == len(self._input_tokens) - 1:
