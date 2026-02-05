@@ -18,6 +18,28 @@ class AliasNode():
     def __str__(self) -> str:
         return f"AliasNode('{self.original_name}' -> '{self.alias_name}')"
 
+    def __eq__(self, value: object) -> bool:
+        if isinstance(value, AliasNode):
+            return self.original_name == value.original_name and self.alias_name == value.alias_name
+        if isinstance(value, CommandNode):
+            if value.type == "fallback":
+                return False
+            return self.original_name == value.name
+        if isinstance(value, str):
+            return self.original_name == value and self.alias_name == value
+        return False
+
+    def __ne__(self, value: object) -> bool:
+        if isinstance(value, AliasNode):
+            return self.original_name != value.original_name or self.alias_name != value.alias_name
+        if isinstance(value, CommandNode):
+            if value.type == "fallback":
+                return True
+            return self.original_name != value.name
+        if isinstance(value, str):
+            return self.original_name != value or self.alias_name != value
+        return True
+
 @dataclass(frozen=True)
 class CommandNode:
     """Universal template for command nodes."""
@@ -30,7 +52,20 @@ class CommandNode:
     def __eq__(self, value: object) -> bool:
         if isinstance(value, CommandNode):
             return self.name == value.name and self.type == value.type
+        if isinstance(value, str):
+            if self.type != "fallback":
+                return self.name == value
+            return True
         return False
+
+    def __ne__(self, value: object) -> bool:
+        if isinstance(value, CommandNode):
+            return self.name != value.name or self.type != value.type
+        if isinstance(value, str):
+            if self.type != "fallback":
+                return self.name != value
+            return False
+        return True
 
 @dataclass(frozen=True)
 class CommandWordNode(CommandNode):
