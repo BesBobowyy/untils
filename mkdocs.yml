@@ -2,6 +2,7 @@ site_name: untils
 site_url: https://github.com/BesBobowyy/untils
 nav:
   - Welcome Page: index.md
+  - API Reference: api-reference.md
   - Start Guide:
     - 01. First script: start-guide/01-first-project.md
     - 02. Warnings level: start-guide/02-warnings-level.md
@@ -27,4 +28,10 @@ markdown_extensions:
   - pymdownx.tasklist:
       custom_checkbox: true
   - pymdownx.blocks.admonition
+  - mkdocstrings:
+    handlers:
+      python:
+        paths: [src]
+        options:
+          show_source: true
 theme: readthedocs

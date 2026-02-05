@@ -45,3 +45,9 @@ But you have print in work console by `warnings.warning` and exceptions.
 TL;DR: You can use the standard Python's `logging` library with `untils` logs.
 
 You have complete this course, well done! Now you can write your console games or utils with the base library meaning. To see other courses or API Reference return to the main page.
+
+## Documentation
+
+[Home](../index.md "Home page.")
+
+[API Reference](../api-reference.md "API Reference attachment.")

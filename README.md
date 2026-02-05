@@ -36,7 +36,7 @@ pip install untils
 
 [Start Course](start-guide/01-first-project.md "Beginner course into the library.")
 
-API Reference
+[API Reference](api-reference.md)
 
 ## Roadmap
 
