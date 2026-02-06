@@ -8,3 +8,4 @@ code_tests/
 dist/
 build/
 *.egg-info/
+*.lock
