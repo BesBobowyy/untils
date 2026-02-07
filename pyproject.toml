@@ -2,9 +2,15 @@
 requires = ["setuptools>=77.0.3"]
 build-backend = "setuptools.build_meta"
 
+[tool.setuptools.package-data]
+"pkgname" = ["py.typed"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
 [project]
 name = "untils"
-version = "1.0.0"
+version = "1.0.1"
 authors = [{name = "BesBobowyy"}]
 description = "Light-weight library for console games or small utils to process user input as commands and describe structure with config."
 readme = "README.md"
