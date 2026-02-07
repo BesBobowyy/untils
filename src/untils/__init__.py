@@ -24,5 +24,5 @@ from untils.processor import Processor
 from untils.settings import Settings
 from untils.tokenizer import Tokenizer
 
-__version__ = "1.0.0"
+__version__ = "1.0.1"
 __author__ = "BesBobowyy"
