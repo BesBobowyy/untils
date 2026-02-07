@@ -1,8 +1,8 @@
 # Welcome to `untils`
 
-![Version](https://img.shields.io/badge/version-1.0.0-blue)
+![Version](https://img.shields.io/badge/version-1.0.1-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
-![Python](https://img.shields.io/badge/python-3.12-yellow)
+![Python](https://img.shields.io/badge/python-3.12+-yellow)
 
 *untils* - Is light-weight library for console games or small utils to process user input as commands and describe structure with config.
 
@@ -44,7 +44,7 @@ I have resolve my thoughs to several categories:
     - [ ] Add reserved commands in format like internal state name: `"__help__"` - Get all and available commands.
 
 2. **Additional**:
-    - [ ] ...
+    None
 
 3. **Conceptions**:
     - [ ] Typing system in config through `"type"` field.
