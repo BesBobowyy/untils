@@ -38,3 +38,5 @@ class CommandNodeFactory:
             "flag": CommandFlagNode(name, node_type, aliases, default),
             "option": CommandOptionNode(name, node_type, aliases, default)
         }[node_type]
+
+__all__ = ["CommandNodeFactory"]

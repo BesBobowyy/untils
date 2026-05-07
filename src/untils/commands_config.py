@@ -21,3 +21,5 @@ class CommandsConfig:
 
     def __str__(self) -> str:
         return f"CommandsConfig(version={self.version}, states={self.states}, commands={self.commands})"
+
+__all__ = ["CommandsConfig"]

@@ -401,3 +401,5 @@ class CommandSystem:
             Strings.COMMAND_NOT_IMPLEMENTED.substitute(input_str=input_str)
         )
         return False
+
+__all__ = ["CommandSystem"]

@@ -614,3 +614,5 @@ class ConfigValidator:
             "states": states,
             "commands": commands
         }
+
+__all__ = ["ConfigValidator"]

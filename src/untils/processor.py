@@ -86,3 +86,5 @@ class Processor:
         settings.logger.debug(f"Parsed input: {parsed_representation}.")
 
         return parsed_representation
+
+__all__ = ["Processor"]

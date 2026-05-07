@@ -106,3 +106,5 @@ class Tokenizer:
             self._i += 1
 
         return self._result
+
+__all__ = ["Tokenizer"]

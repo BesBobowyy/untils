@@ -136,3 +136,5 @@ class Parser:
             "flags": flags,
             "options": options
         }
+
+__all__ = ["Parser"]

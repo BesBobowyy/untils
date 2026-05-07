@@ -112,3 +112,5 @@ class Settings:
         elif self.warnings_level in (exception_levels or (WarningsLevel.STRICT,)):
             self.logger.error(message, stacklevel=3)
             raise exception_type(message)
+
+__all__ = ["Settings"]

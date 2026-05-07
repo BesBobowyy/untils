@@ -102,3 +102,5 @@ class FinalInputTokenOption:
         if isinstance(value, FinalInputTokenOption):
             return self.name != value.name or self.value != value.value
         return True
+
+__all__ = ["RawInputToken", "FinalInputTokenWord", "FinalInputTokenFlag", "FinalInputTokenOption"]
