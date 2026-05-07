@@ -45,3 +45,5 @@ def alternative(
             return func(*args, **kwargs)
         return wrapper    # pyright: ignore[reportReturnType]
     return decorator
+
+__all__ = ["deprecated", "alternative"]

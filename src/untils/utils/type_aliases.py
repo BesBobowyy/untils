@@ -86,3 +86,10 @@ class CommandHistory(TypedDict):
     """Is delete the oldest notes from history and save the newest on max size limit. If disabled, new notes won't catched in history. By default is `True`."""
     notes: List[Tuple[str, InputDict]]
     """Catched inputs with tracking."""
+
+__all__ = [
+    "ConfigVersion", "CommandClass", "UnknownCommandClass", "CommandType",
+    "InternalCommandStates", "CommandStates", "ConfigSupportedExtensions", "UnknownCommandConfig",
+    "WordCommandConfig", "FallbackCommandConfig", "FlagCommandConfig", "OptionCommandConfig",
+    "ConfigType", "UnknownConfigType", "InputDict", "CommandPath"
+]
