@@ -3,7 +3,7 @@
 # pyright: reportUnusedImport=false
 # ^^^^^^^ (Public imports.)
 
-from untils import utils
+from untils.utils import *
 
 from untils.command_system import *
 from untils.command import *
